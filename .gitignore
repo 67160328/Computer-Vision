@@ -25,5 +25,14 @@ data/processed/phase4_hcr_visuals/*.jpg
 data/A_Z Handwritten Data/*.csv
 data/A_Z Handwritten Data/*.npz
 
+# Raw and generated datasets (Keep manifests and summaries)
+New-Dataset/
+data/dataset_splits/cells/
+data/dataset_splits/sheets_raw/
+data/dataset_splits/sheets_rectified/
+!data/dataset_splits/dataset_manifest.json
+!data/dataset_splits/dataset_summary.md
+
 # Keep metrics visual samples and lightweight test data
 !metrics/visuals/*.jpg
+

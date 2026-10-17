@@ -1,0 +1,20 @@
+﻿sheet_name,category,question_set,page_number,total_score,max_score,ema_pct,cer_pct,strikethrough_removed,flagged_for_review,latency_ms
+ตัวอย่างที่ 1.jpg,data_Test_benchmark,,1,6,6,100.0,0.0,60,6,2553.3
+ตัวอย่างที่ 2.jpg,data_Test_benchmark,,1,20,20,100.0,0.0,0,0,3203.89
+ตัวอย่างที่ 3.jpg,data_Test_benchmark,,1,20,20,100.0,0.0,0,0,2476.37
+ตัวอย่างที่ 4.jpg,data_Test_benchmark,,1,20,20,100.0,0.0,0,1,2513.46
+ตัวอย่างการขีดฆ่า.jpg,data_Test_benchmark,,1,6,6,100.0,0.0,56,6,2448.03
+01_blank_sheets_001.jpg,01_blank_sheets,,1,0,0,100.0,0.0,0,0,2123.06
+01_blank_sheets_023.jpg,01_blank_sheets,,1,0,0,100.0,0.0,0,0,2075.82
+01_blank_sheets_035.jpg,01_blank_sheets,,1,0,0,100.0,0.0,0,0,2079.6
+01_blank_sheets_047.jpg,01_blank_sheets,,1,0,0,100.0,0.0,0,0,2105.48
+01_blank_sheets_049.jpg,01_blank_sheets,,1,0,0,100.0,0.0,0,0,1986.84
+02_edge_strikethrough_005.jpg,02_edge_strikethrough,,1,20,20,100.0,0.0,29,3,2788.74
+02_edge_strikethrough_020.jpg,02_edge_strikethrough,,1,20,20,100.0,0.0,29,0,2367.93
+02_edge_strikethrough_022.jpg,02_edge_strikethrough,,1,20,20,100.0,0.0,29,1,2341.7
+03_horizontal_seq_005.jpg,03_horizontal_seq,,1,20,20,100.0,0.0,0,17,2783.28
+03_horizontal_seq_026.jpg,03_horizontal_seq,,1,20,20,100.0,0.0,0,5,3020.15
+03_horizontal_seq_027.jpg,03_horizontal_seq,,1,20,20,100.0,0.0,0,2,2875.73
+04_words_vocab_001.jpg,04_words_vocab,,1,20,20,100.0,0.0,0,1,2305.95
+04_words_vocab_004.jpg,04_words_vocab,,1,19,20,95.0,0.84,0,7,2654.04
+04_words_vocab_011.jpg,04_words_vocab,,1,19,20,95.0,0.83,0,6,2389.86

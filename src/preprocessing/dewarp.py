@@ -282,7 +282,7 @@ class FiducialDewarper:
             angle_deg = 0.0
             tr_std = 0.0
 
-        # 3. คำนวณ Homography Matrix H และทำการ Warp สู่ขนาด 2480 x 3508
+        # 3. คำนวณ Homography Matrix H เริ่มต้น (Affine Parallelogram) และทำการ Warp สู่ขนาด 2480 x 3508
         H = cv2.getPerspectiveTransform(src_corners, self.CANONICAL_CENTERS)
         rectified_bgr = cv2.warpPerspective(
             img_bgr,
@@ -294,9 +294,53 @@ class FiducialDewarper:
         )
 
         rectified_gray = cv2.cvtColor(rectified_bgr, cv2.COLOR_BGR2GRAY)
-        if return_normalized:
-            rectified_norm_gray = self.normalize_illumination(rectified_gray, sigma=51.0)
-        else:
+        rectified_norm_gray = self.normalize_illumination(rectified_gray, sigma=51.0)
+
+        # 3.1 True 4-Point Projective Homography Refinement:
+        # กรณีถ่ายภาพมุมเอียงเกิด Perspective Foreshortening ทำให้จุดมุมที่ 4 (TL ที่คำนวณจากสี่เหลี่ยมด้านขนาน) คลาดเคลื่อน
+        # เราจะค้นหาขีดดำ Timing Bar ข้อที่ 1 ฝั่งซ้ายบน (พิกัดมาตรฐาน [133.0, 910.0]) เพื่อล็อกระนาบ 4 จุดจริง 100%
+        if not used_fallback:
+            tl_bar = self._detect_top_left_timing_bar_anchor(rectified_norm_gray)
+            if tl_bar is not None:
+                dx_bar = abs(tl_bar[0] - 133.0)
+                dy_bar = abs(tl_bar[1] - 910.0)
+                if dx_bar > 10.0 or dy_bar > 14.0:
+                    H_inv = np.linalg.inv(H)
+                    pt_rect = np.array([[[tl_bar[0], tl_bar[1]]]], dtype=np.float32)
+                    pt_raw = cv2.perspectiveTransform(pt_rect, H_inv)[0, 0]
+                    src_4 = np.array(
+                        [pt_raw, src_corners[1], src_corners[2], src_corners[3]],
+                        dtype=np.float32,
+                    )
+                    dst_4 = np.array(
+                        [
+                            [133.0, 910.0],
+                            self.CANONICAL_CENTERS[1],
+                            self.CANONICAL_CENTERS[2],
+                            self.CANONICAL_CENTERS[3],
+                        ],
+                        dtype=np.float32,
+                    )
+                    H_refined = cv2.getPerspectiveTransform(src_4, dst_4)
+                    # อัปเดตพิกัดมุม TL เสมือนบนภาพต้นฉบับให้สอดคล้องกับ H_refined
+                    H_ref_inv = np.linalg.inv(H_refined)
+                    tl_canon = np.array([[[self.CANONICAL_CENTERS[0][0], self.CANONICAL_CENTERS[0][1]]]], dtype=np.float32)
+                    src_corners[0] = cv2.perspectiveTransform(tl_canon, H_ref_inv)[0, 0]
+                    H = H_refined
+                    rectified_bgr = cv2.warpPerspective(
+                        img_bgr,
+                        H,
+                        (self.CANONICAL_WIDTH, self.CANONICAL_HEIGHT),
+                        flags=cv2.INTER_LINEAR,
+                        borderMode=cv2.BORDER_CONSTANT,
+                        borderValue=(255, 255, 255),
+                    )
+                    rectified_gray = cv2.cvtColor(rectified_bgr, cv2.COLOR_BGR2GRAY)
+                    if return_normalized:
+                        rectified_norm_gray = self.normalize_illumination(rectified_gray, sigma=51.0)
+                    else:
+                        rectified_norm_gray = rectified_gray
+        elif not return_normalized:
             rectified_norm_gray = rectified_gray
 
         elapsed_ms = (time.perf_counter() - t0) * 1000.0
@@ -374,6 +418,71 @@ class FiducialDewarper:
 
         refined[0] = refined[1] + refined[3] - refined[2]
         return refined
+
+    def _detect_top_left_timing_bar_anchor(
+        self, rectified_norm_gray: np.ndarray
+    ) -> Optional[Tuple[float, float]]:
+        """
+        ค้นหาจุดศูนย์กลางของขีดดำ Timing Bar ซ้ายบนสุด (ข้อที่ 1) เพื่อใช้เป็นจุดอ้างอิงที่ 4 จริง (True 4th Projective Anchor)
+        ตรวจสอบความเรียงตัวเป็นเส้นตรงและระยะห่างระหว่างแถว (~115 px) อย่างน้อย 12 แถวเพื่อป้องกันสัญญาณรบกวนจากขอบโต๊ะไม้
+        """
+        y_top, y_bot = 740, 3230
+        x_min, x_max = 60, 430
+        roi = rectified_norm_gray[y_top:y_bot, x_min:x_max]
+        dark = (roi < 178).astype(np.uint8) * 255
+        dark = cv2.morphologyEx(
+            dark, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, (11, 7))
+        )
+        bars = cv2.morphologyEx(
+            dark, cv2.MORPH_OPEN, cv2.getStructuringElement(cv2.MORPH_RECT, (22, 7))
+        )
+        cnts, _ = cv2.findContours(bars, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cands = []
+        for c in cnts:
+            x, y, bw, bh = cv2.boundingRect(c)
+            if 46 <= bw <= 90 and 12 <= bh <= 32:
+                M = cv2.moments(c)
+                if M["m00"] > 0:
+                    cx = float(x_min + M["m10"] / M["m00"])
+                    cy = float(y_top + M["m01"] / M["m00"])
+                    cands.append((cx, cy))
+
+        cands.sort(key=lambda p: p[1])
+        dedup = []
+        for cx, cy in cands:
+            if not dedup or (cy - dedup[-1][1]) > 75.0 or abs(cx - dedup[-1][0]) > 40.0:
+                dedup.append([cx, cy])
+
+        if len(dedup) < 12:
+            return None
+
+        # กรองเฉพาะชุดขีดดำที่มีระยะห่างแถวสม่ำเสมอ (~100..132 px) โดยต้องเริ่มจากขีดบนสุดที่มีขีดถัดไปห่าง ~115 px
+        valid_chain = []
+        for i in range(len(dedup)):
+            chain = [dedup[i]]
+            for j in range(i + 1, len(dedup)):
+                dy = dedup[j][1] - chain[-1][1]
+                dx = abs(dedup[j][0] - chain[-1][0])
+                if 95.0 <= dy <= 135.0 and dx <= 25.0:
+                    chain.append(dedup[j])
+                elif 195.0 <= dy <= 265.0 and dx <= 45.0:
+                    chain.append(dedup[j])
+            if len(chain) >= 15:
+                valid_chain = chain
+                break
+            elif len(chain) > len(valid_chain):
+                valid_chain = chain
+
+        if len(valid_chain) < 12:
+            return None
+
+        pts = np.array(valid_chain[:20], dtype=np.float32)
+        slope_x, intercept_x = np.polyfit(pts[:, 1], pts[:, 0], 1)
+        top_y = float(pts[0, 1])
+        if 750.0 <= top_y <= 990.0:
+            top_x = float(intercept_x + slope_x * top_y)
+            return (top_x, top_y)
+        return None
 
     def _evaluate_rectified_quality(
         self, rectified_norm_gray: np.ndarray

@@ -1,0 +1,348 @@
+{
+  "phase": "Phase 3 - Cell State & Double Strikethrough (=) Detection",
+  "model_architecture": "StrikethroughHybridNet (Dual-Channel 64x64 ResNet + 6D Morphological Stroke Features)",
+  "weights_path": "models/strikethrough_cnn.pt",
+  "dataset_split_ratio": "80:10:10 (Sheet-Level Stratified, Zero Data Leakage)",
+  "raw_split_cell_counts": {
+    "train": {
+      "empty": 2620,
+      "normal_char": 17401,
+      "strikethrough": 799
+    },
+    "val": {
+      "empty": 320,
+      "normal_char": 2023,
+      "strikethrough": 97
+    },
+    "test": {
+      "empty": 320,
+      "normal_char": 2133,
+      "strikethrough": 89
+    }
+  },
+  "validation_metrics": {
+    "overall_accuracy_pct": 99.96,
+    "macro_precision_pct": 99.66,
+    "macro_recall_pct": 99.98,
+    "macro_f1_pct": 99.82,
+    "strikethrough_roc_auc_pct": 100.0,
+    "per_class": {
+      "empty": {
+        "precision_pct": 100.0,
+        "recall_pct": 100.0,
+        "f1_pct": 100.0,
+        "support": 320
+      },
+      "normal_char": {
+        "precision_pct": 100.0,
+        "recall_pct": 99.95,
+        "f1_pct": 99.98,
+        "support": 2023
+      },
+      "strikethrough": {
+        "precision_pct": 98.98,
+        "recall_pct": 100.0,
+        "f1_pct": 99.49,
+        "support": 97
+      }
+    },
+    "confusion_matrix": [
+      [
+        320,
+        0,
+        0
+      ],
+      [
+        0,
+        2022,
+        1
+      ],
+      [
+        0,
+        0,
+        97
+      ]
+    ]
+  },
+  "test_metrics": {
+    "overall_accuracy_pct": 99.88,
+    "macro_precision_pct": 99.59,
+    "macro_recall_pct": 99.24,
+    "macro_f1_pct": 99.41,
+    "strikethrough_roc_auc_pct": 99.99,
+    "per_class": {
+      "empty": {
+        "precision_pct": 100.0,
+        "recall_pct": 100.0,
+        "f1_pct": 100.0,
+        "support": 320
+      },
+      "normal_char": {
+        "precision_pct": 99.91,
+        "recall_pct": 99.95,
+        "f1_pct": 99.93,
+        "support": 2133
+      },
+      "strikethrough": {
+        "precision_pct": 98.86,
+        "recall_pct": 97.75,
+        "f1_pct": 98.31,
+        "support": 89
+      }
+    },
+    "confusion_matrix": [
+      [
+        320,
+        0,
+        0
+      ],
+      [
+        0,
+        2132,
+        1
+      ],
+      [
+        0,
+        2,
+        87
+      ]
+    ]
+  },
+  "training_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.1757,
+      "val_accuracy_pct": 86.8,
+      "val_macro_f1_pct": 63.87,
+      "val_strikethrough_f1_pct": 98.98,
+      "time_sec": 51.7
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.1223,
+      "val_accuracy_pct": 99.75,
+      "val_macro_f1_pct": 98.95,
+      "val_strikethrough_f1_pct": 97.0,
+      "time_sec": 51.67
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.1208,
+      "val_accuracy_pct": 98.65,
+      "val_macro_f1_pct": 95.59,
+      "val_strikethrough_f1_pct": 88.99,
+      "time_sec": 51.66
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.121,
+      "val_accuracy_pct": 99.88,
+      "val_macro_f1_pct": 99.47,
+      "val_strikethrough_f1_pct": 98.48,
+      "time_sec": 51.81
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.1178,
+      "val_accuracy_pct": 99.84,
+      "val_macro_f1_pct": 99.29,
+      "val_strikethrough_f1_pct": 97.98,
+      "time_sec": 52.62
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.1179,
+      "val_accuracy_pct": 99.96,
+      "val_macro_f1_pct": 99.82,
+      "val_strikethrough_f1_pct": 99.49,
+      "time_sec": 51.61
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.1173,
+      "val_accuracy_pct": 99.92,
+      "val_macro_f1_pct": 99.64,
+      "val_strikethrough_f1_pct": 98.98,
+      "time_sec": 52.1
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.1193,
+      "val_accuracy_pct": 99.96,
+      "val_macro_f1_pct": 99.82,
+      "val_strikethrough_f1_pct": 99.48,
+      "time_sec": 53.36
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.118,
+      "val_accuracy_pct": 99.88,
+      "val_macro_f1_pct": 99.47,
+      "val_strikethrough_f1_pct": 98.48,
+      "time_sec": 51.76
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.1165,
+      "val_accuracy_pct": 99.96,
+      "val_macro_f1_pct": 99.82,
+      "val_strikethrough_f1_pct": 99.49,
+      "time_sec": 53.08
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.1157,
+      "val_accuracy_pct": 99.8,
+      "val_macro_f1_pct": 99.12,
+      "val_strikethrough_f1_pct": 97.49,
+      "time_sec": 52.48
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.1164,
+      "val_accuracy_pct": 99.92,
+      "val_macro_f1_pct": 99.64,
+      "val_strikethrough_f1_pct": 98.98,
+      "time_sec": 52.37
+    }
+  ],
+  "end_to_end_sheet_evaluations": [
+    {
+      "sheet_name": "ตัวอย่างที่ 1.jpg",
+      "visual_output": "metrics\\visuals\\phase3_test_1.jpg",
+      "phase3_inference_ms": 1339.2,
+      "total_pipeline_ms": 2799.95,
+      "detected_empty_cells": 159,
+      "detected_normal_char_cells": 181,
+      "detected_strikethrough_cells": 60,
+      "assembled_words_after_strike_removal": {
+        "row_01": "UUUUUUUUUUUUUUUUUUUU",
+        "row_02": "VVVVVVVVVVVVVVVVVVVV",
+        "row_03": "WWWWWWWWWWWWWWWWWWWW",
+        "row_04": "XXXXXXXXXXXXXXXXXXXX",
+        "row_05": "YYYYYYYYYYYYYYYYYYYY",
+        "row_06": "ZZZZZZZZZZZZZZZZZZZZ",
+        "row_10": "MRRMHXMMXXRRMMBYMRRR",
+        "row_11": "MNMXXNMRRHRXYMRXRXMX",
+        "row_12": "BQMXBXGMMXXZRRRWRABA",
+        "row_13": "T"
+      }
+    },
+    {
+      "sheet_name": "ตัวอย่างการขีดฆ่า.jpg",
+      "visual_output": "metrics\\visuals\\phase3_test_strike.jpg",
+      "phase3_inference_ms": 1289.67,
+      "total_pipeline_ms": 2527.39,
+      "detected_empty_cells": 273,
+      "detected_normal_char_cells": 71,
+      "detected_strikethrough_cells": 56,
+      "assembled_words_after_strike_removal": {
+        "row_01": "UA",
+        "row_02": "V",
+        "row_03": "W",
+        "row_04": "X",
+        "row_05": "Y",
+        "row_06": "Z",
+        "row_07": "HH",
+        "row_08": "G",
+        "row_09": "H",
+        "row_10": "MRRMHXGMRXRRMMBYMRRR",
+        "row_11": "MNMXXNKRRGRXYRRYRRMM",
+        "row_12": "BQMRGXGXMXXZRRRNRABA"
+      }
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_005.jpg",
+      "visual_output": "metrics\\visuals\\phase3_edge_test_1.jpg",
+      "phase3_inference_ms": 1332.09,
+      "total_pipeline_ms": 2934.42,
+      "detected_empty_cells": 188,
+      "detected_normal_char_cells": 183,
+      "detected_strikethrough_cells": 29,
+      "assembled_words_after_strike_removal": {
+        "row_01": "ADVENTURES",
+        "row_02": "INSPIRATION",
+        "row_03": "WONDERLAND",
+        "row_04": "FORTITUDE",
+        "row_05": "EUPHORIC",
+        "row_06": "MAGNITUDE",
+        "row_07": "INNOVATIVE",
+        "row_08": "UNIVFRSE",
+        "row_09": "RADIANT",
+        "row_10": "VTCTORIOUS",
+        "row_11": "ADRENALINE",
+        "row_12": "ASTONISHING",
+        "row_13": "EXQISITE",
+        "row_14": "MARVELOUS",
+        "row_15": "DOMINATOR",
+        "row_16": "UNSTOPPABLE",
+        "row_17": "INFINITY",
+        "row_18": "SERENITY",
+        "row_19": "DAZZLING",
+        "row_20": "LEGENDARY"
+      }
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_020.jpg",
+      "visual_output": "metrics\\visuals\\phase3_edge_test_2.jpg",
+      "phase3_inference_ms": 1225.66,
+      "total_pipeline_ms": 2562.79,
+      "detected_empty_cells": 235,
+      "detected_normal_char_cells": 136,
+      "detected_strikethrough_cells": 29,
+      "assembled_words_after_strike_removal": {
+        "row_01": "PROGRAM",
+        "row_02": "ROBOT",
+        "row_03": "SCIENCE",
+        "row_04": "TECHNOLOGY",
+        "row_05": "DIGITAL",
+        "row_06": "NETWORK",
+        "row_07": "PICTURE",
+        "row_08": "CAMERA",
+        "row_09": "MOVIE",
+        "row_10": "STORY",
+        "row_11": "LAUGTER",
+        "row_12": "FEELING",
+        "row_13": "COURAGE",
+        "row_14": "PATIENCE",
+        "row_15": "HONEST",
+        "row_16": "POLITE",
+        "row_17": "CLEVER",
+        "row_18": "GENTLE",
+        "row_19": "POWERFUL",
+        "row_20": "WONDERFUL"
+      }
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_022.jpg",
+      "visual_output": "metrics\\visuals\\phase3_edge_test_3.jpg",
+      "phase3_inference_ms": 1345.8,
+      "total_pipeline_ms": 2777.65,
+      "detected_empty_cells": 240,
+      "detected_normal_char_cells": 130,
+      "detected_strikethrough_cells": 30,
+      "assembled_words_after_strike_removal": {
+        "row_01": "HARBOR",
+        "row_02": "WITHDRAW",
+        "row_03": "VIGOR",
+        "row_04": "HARVEST",
+        "row_05": "LAVISH",
+        "row_06": "NOMINAT",
+        "row_07": "BLOOM",
+        "row_08": "DIGNITY",
+        "row_09": "OBTAIN",
+        "row_10": "HESITATE",
+        "row_11": "LOGIC",
+        "row_12": "FORFEIT",
+        "row_13": "PERMIT",
+        "row_14": "CONFRONT",
+        "row_15": "REIGN",
+        "row_16": "UNDERGOC",
+        "row_17": "SELDOM",
+        "row_18": "TRANSFER",
+        "row_19": "SCALE",
+        "row_20": "COMPILE"
+      }
+    }
+  ]
+}

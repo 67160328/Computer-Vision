@@ -68,11 +68,22 @@
 - **OMR Bubble Exact Alignment:** **`100.0%`** (357/357 วง | Mean NCC = `0.4653`)
 - **OMR Bubble CLA Accuracy:** **`100.0%`** (`100.0%`)
 
+### Phase 3: Double Strikethrough (`=`) Detection & Filtering
+- **Multi-Angle Slanted Kernels ($-12^\circ$ to $+12^\circ$):** รองรับรอยขีดฆ่าเอียง/เบี้ยวได้สมบูรณ์
+- **Strikethrough Precision / Recall:** **`100.0% / 100.0%` (F1 = 1.000)** บนชุดทดสอบขีดฆ่าจริง
+- **Normal Character Invariance:** ตัวอักษรปกติที่มีเส้นขนานเช่น `F` และ `Z` ไม่ถูกตรวจจับผิดพลาดเลยแม้แต่ช่องเดียว (**`FPR = 0.0%`**)
+
 ### Phase 4: Handwritten Character Recognition (HCR CNN Engine)
 - **A–Z Validation Accuracy (7,800 ตัวอย่าง):** **`Top-1 = 98.77%`**, **`Top-3 = 99.80%`**, **`Macro-F1 = 0.9879`**
 - **Real Exam Sheets Character Accuracy (786 ตัวอักษร):** **`Top-1 = 100.0% (786/786)`**, **`Top-3 = 100.0%`**, **`Macro-F1 = 1.0000`**
 - **Real Exam Word / Row Match (72 แถวคำตอบจริง):** **`100.0% (72/72 แถว)`**
 - **Row-Batch Latency (CPU):** **`19.14 ms / แถว`** ($\approx 0.96\text{ ms/ช่อง}$)
+
+### Phase 5: Word Assembly, Lexicon Refinement & Automated Scoring
+- **Exact Match Word Accuracy (EMA):** **`99.21% (250 / 252 ข้อ)`** บน 19 กระดาษคำตอบชุดทดสอบ
+- **Character Error Rate (CER):** **`0.10%`** (จาก 2,921 ตัวอักษรที่มีเฉลย)
+- **Score Pearson Correlation ($r$):** **`0.9994`** สอดคล้องกับคะแนนจริงเกือบสมบูรณ์แบบ
+- **End-to-End Latency:** **`~2,478.6 ms / แผ่น`** (ประมวลผลตั้งแต่ภาพถ่ายดิบจนออกผลคะแนนบน CPU)
 
 ---
 
@@ -88,33 +99,42 @@ Lab9/
 │   ├── Phase4_Character_Recognition_HCR.md
 │   └── Phase5_Word_Assembly_and_Grading.md
 ├── src/                                 # ซอร์สโค้ดการประมวลผล
-│   ├── preprocessing/                   # Phase 1: Dewarping & Marker Detection
-│   │   └── dewarp.py
-│   ├── detection/                       # Phase 2: Timing Bars, Grid & OMR Extraction
-│   │   └── grid_extractor.py
+│   ├── preprocessing/                   # Phase 1: Dewarping & Dataset Split Tools
+│   │   ├── dewarp.py
+│   │   ├── prepare_new_dataset.py
+│   │   └── upgrade_dataset_labels.py
+│   ├── detection/                       # Phase 2 & 3: Grid, OMR, Strikethrough
+│   │   ├── grid_extractor.py
+│   │   └── strikethrough_detector.py
 │   ├── recognition/                     # Phase 4: HCR Normalizer, ResNet28 & Trainer
 │   │   ├── char_classifier.py
 │   │   └── train_hcr.py
+│   ├── grading/                         # Phase 5: Word Assembly & Automated Scoring
+│   │   └── grader.py
 │   └── evaluation/                      # สคริปต์รันประเมินผลเชิงปริมาณ
 │       ├── evaluate_phase1.py
 │       ├── evaluate_phase2.py
+│       ├── evaluate_phase3.py
 │       ├── evaluate_phase4.py
-│       └── test_handwritten_sheets.py
+│       ├── evaluate_phase5.py
+│       └── test_full_pipeline_on_test_split.py
 ├── models/                              # โมเดล Deep Learning ที่เทรนเสร็จสมบูรณ์
-│   └── hcr_resnet28_az.pt               # Lightweight ResNet-28 สำหรับจำแนกอักษร A-Z
+│   ├── hcr_resnet28_az.pt               # Lightweight ResNet-28 สำหรับจำแนกอักษร A-Z
+│   └── strikethrough_cnn.pt             # Hybrid CNN สำหรับจำแนกช่องว่าง/ขีดฆ่า/อักษรปกติ
 ├── metrics/                             # รายงานตัวชี้วัดเชิงปริมาณและภาพตัวอย่าง
 │   ├── README.md
 │   ├── Phase1_Metrics_Report.md
 │   ├── Phase2_Metrics_Report.md
+│   ├── Phase3_Metrics_Report.md
 │   ├── Phase4_Metrics_Report.md
-│   ├── phase1_evaluation_metrics.json
-│   ├── phase2_evaluation_metrics.json
-│   ├── phase4_evaluation_metrics.json
-│   └── visuals/                         # ภาพผลลัพธ์การจัดตำแหน่งและผลวิเคราะห์ตัวอักษร
+│   ├── Phase5_Metrics_Report.md
+│   ├── phase5_evaluation_metrics.json
+│   ├── phase5_grading_results.csv
+│   └── visuals/                         # ภาพผลลัพธ์การตรวจและให้คะแนนรายแผ่น
 ├── data/                                # ข้อมูลรูปภาพกระดาษคำตอบ
 │   ├── raw/                             # ภาพถ่ายต้นฉบับจากสมาร์ทโฟน
-│   ├── Test/                            # ภาพกระดาษคำตอบที่มีลายมือเขียนและรอยขีดฆ่าจริง
-│   └── processed/                       # ภาพผลลัพธ์การดัดระนาบและผลวิเคราะห์
+│   ├── Test/                            # ภาพกระดาษคำตอบชุด Benchmark ดั้งเดิม
+│   └── dataset_splits/                  # ชุดข้อมูล 80:10:10 (Manifest & Summaries)
 ├── requirements.txt                     # รายการไลบรารีที่จำเป็น
 └── README.md                            # คำอธิบายโปรเจกต์
 ```
@@ -128,19 +148,22 @@ Lab9/
 pip install -r requirements.txt
 ```
 
-### 2. รันการประเมินผล Phase 1 (Preprocessing & Dewarping)
+### 2. รันการประเมินผลแยกตามแต่ละ Phase
 ```bash
+# Phase 1: Preprocessing & Dewarping
 python src/evaluation/evaluate_phase1.py
-```
 
-### 3. รันการประเมินผล Phase 2 (Grid & Cell Extraction)
-```bash
+# Phase 2: Grid & Cell Extraction
 python src/evaluation/evaluate_phase2.py
-```
 
-### 4. รันการประเมินผล Phase 4 (Handwritten Character Recognition)
-```bash
+# Phase 3: Double Strikethrough Detection
+python src/evaluation/evaluate_phase3.py
+
+# Phase 4: Handwritten Character Recognition
 python src/evaluation/evaluate_phase4.py
+
+# Phase 5: End-to-End Automated Grading & Scoring
+python src/evaluation/evaluate_phase5.py
 ```
 
 ---

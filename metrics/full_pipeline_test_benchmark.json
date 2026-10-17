@@ -1,0 +1,1748 @@
+{
+  "total_unseen_test_sheets": 14,
+  "total_cells_evaluated": 5600,
+  "category_summaries": {
+    "01_blank_sheets": {
+      "label": "0.กระดาษเปล่า (Blank Sheets)",
+      "num_sheets": 5,
+      "total_empty_cells": 2000,
+      "total_normal_cells": 0,
+      "total_strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 100.0,
+      "mean_total_ms": 2135.0
+    },
+    "02_edge_strikethrough": {
+      "label": "Edge (เขียนคำผิด + ขีดฆ่า 2 เส้น `=`)",
+      "num_sheets": 3,
+      "total_empty_cells": 663,
+      "total_normal_cells": 450,
+      "total_strikethrough_cells": 87,
+      "mean_hcr_confidence_pct": 90.08,
+      "mean_total_ms": 2607.0
+    },
+    "03_horizontal_seq": {
+      "label": "Horizontal (เขียนเรียงตัวอักษร A-Z)",
+      "num_sheets": 3,
+      "total_empty_cells": 0,
+      "total_normal_cells": 1200,
+      "total_strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 88.16,
+      "mean_total_ms": 3006.4
+    },
+    "04_words_vocab": {
+      "label": "Words (เขียนเป็นคำศัพท์ภาษาอังกฤษ)",
+      "num_sheets": 3,
+      "total_empty_cells": 714,
+      "total_normal_cells": 486,
+      "total_strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 87.06,
+      "mean_total_ms": 2531.4
+    }
+  },
+  "sheets": [
+    {
+      "sheet_name": "01_blank_sheets_001.jpg",
+      "category_dir": "01_blank_sheets",
+      "category_label": "0.กระดาษเปล่า (Blank Sheets)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 207.68,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 400,
+      "normal_char_cells": 0,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 100.0,
+      "phase1_ms": 676.0,
+      "phase2_ms": 289.7,
+      "phase3_ms": 1113.5,
+      "phase4_ms": 0.1,
+      "total_ms": 2199.7,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_01_blank_sheets_001.jpg",
+      "sample_rows": [],
+      "all_rows": []
+    },
+    {
+      "sheet_name": "01_blank_sheets_023.jpg",
+      "category_dir": "01_blank_sheets",
+      "category_label": "0.กระดาษเปล่า (Blank Sheets)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 270.01,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 400,
+      "normal_char_cells": 0,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 100.0,
+      "phase1_ms": 666.4,
+      "phase2_ms": 299.1,
+      "phase3_ms": 1038.4,
+      "phase4_ms": 0.1,
+      "total_ms": 2125.7,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_01_blank_sheets_023.jpg",
+      "sample_rows": [],
+      "all_rows": []
+    },
+    {
+      "sheet_name": "01_blank_sheets_035.jpg",
+      "category_dir": "01_blank_sheets",
+      "category_label": "0.กระดาษเปล่า (Blank Sheets)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 179.61,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 400,
+      "normal_char_cells": 0,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 100.0,
+      "phase1_ms": 698.6,
+      "phase2_ms": 299.9,
+      "phase3_ms": 1100.4,
+      "phase4_ms": 0.1,
+      "total_ms": 2221.6,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_01_blank_sheets_035.jpg",
+      "sample_rows": [],
+      "all_rows": []
+    },
+    {
+      "sheet_name": "01_blank_sheets_047.jpg",
+      "category_dir": "01_blank_sheets",
+      "category_label": "0.กระดาษเปล่า (Blank Sheets)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 90.5,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 400,
+      "normal_char_cells": 0,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 100.0,
+      "phase1_ms": 623.8,
+      "phase2_ms": 277.2,
+      "phase3_ms": 1046.1,
+      "phase4_ms": 0.1,
+      "total_ms": 2066.8,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_01_blank_sheets_047.jpg",
+      "sample_rows": [],
+      "all_rows": []
+    },
+    {
+      "sheet_name": "01_blank_sheets_049.jpg",
+      "category_dir": "01_blank_sheets",
+      "category_label": "0.กระดาษเปล่า (Blank Sheets)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 331.62,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 400,
+      "normal_char_cells": 0,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 100.0,
+      "phase1_ms": 594.1,
+      "phase2_ms": 292.3,
+      "phase3_ms": 1052.2,
+      "phase4_ms": 0.1,
+      "total_ms": 2061.0,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_01_blank_sheets_049.jpg",
+      "sample_rows": [],
+      "all_rows": []
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_005.jpg",
+      "category_dir": "02_edge_strikethrough",
+      "category_label": "Edge (เขียนคำผิด + ขีดฆ่า 2 เส้น `=`)",
+      "raw_resolution": "3213x5712",
+      "orientation_angle_deg": 358.47,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 188,
+      "normal_char_cells": 183,
+      "strikethrough_cells": 29,
+      "mean_hcr_confidence_pct": 89.21,
+      "phase1_ms": 711.6,
+      "phase2_ms": 282.0,
+      "phase3_ms": 1230.5,
+      "phase4_ms": 321.4,
+      "total_ms": 2733.1,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_02_edge_strikethrough_005.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "ADVENTURES",
+          "valid_chars": 10,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 2,
+          "word": "INSPIRATION",
+          "valid_chars": 11,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 3,
+          "word": "WONDERLAND",
+          "valid_chars": 10,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 4,
+          "word": "FORTITUDE",
+          "valid_chars": 9,
+          "strikethrough_removed": 4
+        },
+        {
+          "row": 5,
+          "word": "EUPHORIC",
+          "valid_chars": 8,
+          "strikethrough_removed": 1
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "ADVENTURES",
+          "valid_chars": 10,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 2,
+          "word": "INSPIRATION",
+          "valid_chars": 11,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 3,
+          "word": "WONDERLAND",
+          "valid_chars": 10,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 4,
+          "word": "FORTITUDE",
+          "valid_chars": 9,
+          "strikethrough_removed": 4
+        },
+        {
+          "row": 5,
+          "word": "EUPHORIC",
+          "valid_chars": 8,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 6,
+          "word": "MAGNITUDE",
+          "valid_chars": 9,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 7,
+          "word": "INNOVATIVE",
+          "valid_chars": 10,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 8,
+          "word": "UNIVFRSE",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 9,
+          "word": "RADIANT",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 10,
+          "word": "VTCTORIOUS",
+          "valid_chars": 10,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 11,
+          "word": "ADRENALINE",
+          "valid_chars": 10,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 12,
+          "word": "ASTONISHING",
+          "valid_chars": 11,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 13,
+          "word": "EXQISITE",
+          "valid_chars": 8,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 14,
+          "word": "MARVELOUS",
+          "valid_chars": 9,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 15,
+          "word": "DOMINATOR",
+          "valid_chars": 9,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 16,
+          "word": "UNSTOPPABLE",
+          "valid_chars": 11,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 17,
+          "word": "INFINITY",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 18,
+          "word": "SERENITY",
+          "valid_chars": 8,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 19,
+          "word": "DAZZLING",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 20,
+          "word": "LEGENDARY",
+          "valid_chars": 9,
+          "strikethrough_removed": 1
+        }
+      ]
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_020.jpg",
+      "category_dir": "02_edge_strikethrough",
+      "category_label": "Edge (เขียนคำผิด + ขีดฆ่า 2 เส้น `=`)",
+      "raw_resolution": "3213x5712",
+      "orientation_angle_deg": 358.61,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 235,
+      "normal_char_cells": 136,
+      "strikethrough_cells": 29,
+      "mean_hcr_confidence_pct": 89.78,
+      "phase1_ms": 594.9,
+      "phase2_ms": 283.6,
+      "phase3_ms": 1195.7,
+      "phase4_ms": 256.5,
+      "total_ms": 2469.0,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_02_edge_strikethrough_020.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "PROGRAM",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 2,
+          "word": "ROBOT",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 3,
+          "word": "SCIENCE",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 4,
+          "word": "TECHNOLOGY",
+          "valid_chars": 10,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 5,
+          "word": "DIGITAL",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "PROGRAM",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 2,
+          "word": "ROBOT",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 3,
+          "word": "SCIENCE",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 4,
+          "word": "TECHNOLOGY",
+          "valid_chars": 10,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 5,
+          "word": "DIGITAL",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 6,
+          "word": "NETWORK",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 7,
+          "word": "PICTURE",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 8,
+          "word": "CAMERA",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 9,
+          "word": "MOVIE",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 10,
+          "word": "STORY",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 11,
+          "word": "LAUGTER",
+          "valid_chars": 7,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 12,
+          "word": "FEELING",
+          "valid_chars": 7,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 13,
+          "word": "COURAGE",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 14,
+          "word": "PATIENCE",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 15,
+          "word": "HONEST",
+          "valid_chars": 6,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 16,
+          "word": "POLITE",
+          "valid_chars": 6,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 17,
+          "word": "CLEVER",
+          "valid_chars": 6,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 18,
+          "word": "GENTLE",
+          "valid_chars": 6,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 19,
+          "word": "POWERFUL",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 20,
+          "word": "WONDERFUL",
+          "valid_chars": 9,
+          "strikethrough_removed": 2
+        }
+      ]
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_022.jpg",
+      "category_dir": "02_edge_strikethrough",
+      "category_label": "Edge (เขียนคำผิด + ขีดฆ่า 2 เส้น `=`)",
+      "raw_resolution": "3213x5712",
+      "orientation_angle_deg": 359.36,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 240,
+      "normal_char_cells": 131,
+      "strikethrough_cells": 29,
+      "mean_hcr_confidence_pct": 91.24,
+      "phase1_ms": 634.1,
+      "phase2_ms": 281.6,
+      "phase3_ms": 1298.4,
+      "phase4_ms": 261.3,
+      "total_ms": 2619.0,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_02_edge_strikethrough_022.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "HARBOR",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 2,
+          "word": "WITHDRAW",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 3,
+          "word": "VIGOR",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 4,
+          "word": "HARVEST",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 5,
+          "word": "LAVISH",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "HARBOR",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 2,
+          "word": "WITHDRAW",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 3,
+          "word": "VIGOR",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 4,
+          "word": "HARVEST",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 5,
+          "word": "LAVISH",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 6,
+          "word": "NOMINATE",
+          "valid_chars": 8,
+          "strikethrough_removed": 6
+        },
+        {
+          "row": 7,
+          "word": "BLOOM",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 8,
+          "word": "DIGNITY",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 9,
+          "word": "OBTAIN",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 10,
+          "word": "HESITATE",
+          "valid_chars": 8,
+          "strikethrough_removed": 2
+        },
+        {
+          "row": 11,
+          "word": "LOGIC",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 12,
+          "word": "FORFEIT",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 13,
+          "word": "PERMIT",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 14,
+          "word": "CONFRONT",
+          "valid_chars": 8,
+          "strikethrough_removed": 3
+        },
+        {
+          "row": 15,
+          "word": "REIGN",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 16,
+          "word": "UNDERGO",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 17,
+          "word": "SELDOM",
+          "valid_chars": 6,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 18,
+          "word": "TRANSFER",
+          "valid_chars": 8,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 19,
+          "word": "SCALE",
+          "valid_chars": 5,
+          "strikethrough_removed": 1
+        },
+        {
+          "row": 20,
+          "word": "COMPILE",
+          "valid_chars": 7,
+          "strikethrough_removed": 1
+        }
+      ]
+    },
+    {
+      "sheet_name": "03_horizontal_seq_005.jpg",
+      "category_dir": "03_horizontal_seq",
+      "category_label": "Horizontal (เขียนเรียงตัวอักษร A-Z)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 357.71,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 0,
+      "normal_char_cells": 400,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 85.41,
+      "phase1_ms": 614.2,
+      "phase2_ms": 312.5,
+      "phase3_ms": 1410.1,
+      "phase4_ms": 512.9,
+      "total_ms": 2966.4,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_03_horizontal_seq_005.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "ABCDEFQHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "UVWXYZABCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OPQRSTUVWXYZABCDEFGH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "IJKLMNOPQRSTUVWXYZAB",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "CDEFQHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "ABCDEFQHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "UVWXYZABCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OPQRSTUVWXYZABCDEFGH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "IJKLMNOPQRSTUVWXYZAB",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "CDEFQHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 6,
+          "word": "WXYZABCDEFQHIJKLMNOP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 7,
+          "word": "QRSTUVWXYZABCDEFQHIJ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 8,
+          "word": "KLMNOPQRSTUVWXYZABCP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 9,
+          "word": "EFGHIJKLMNOPQRSTUVWX",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 10,
+          "word": "YZAPCDEFQHIJKLMNOPQR",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 11,
+          "word": "STUVWXYZABCDEFQHIJKL",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 12,
+          "word": "MNOPQRSTUVWXYZAPCDEF",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 13,
+          "word": "GHIJKLMNOPQRSTUVWXYZ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 14,
+          "word": "ABCPEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 15,
+          "word": "UVWXYZAPCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 16,
+          "word": "OPQRSTUVWXYZAPCDEFQH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 17,
+          "word": "IJRLMNOPQRSTUVWXYZAP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 18,
+          "word": "CDEFGHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 19,
+          "word": "WXYZADCDEFGHIJKLMNOP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 20,
+          "word": "QRSTUVWXYZABCDEFGHIJ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        }
+      ]
+    },
+    {
+      "sheet_name": "03_horizontal_seq_026.jpg",
+      "category_dir": "03_horizontal_seq",
+      "category_label": "Horizontal (เขียนเรียงตัวอักษร A-Z)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 0.24,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 0,
+      "normal_char_cells": 400,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 89.1,
+      "phase1_ms": 626.7,
+      "phase2_ms": 325.9,
+      "phase3_ms": 1362.1,
+      "phase4_ms": 512.5,
+      "total_ms": 2946.2,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_03_horizontal_seq_026.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "ABCDEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "UVWXVZABCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OPQRSTUVWXYZABCDEFGH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "IJKLMNOPQRSTUVWXYZAB",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "CDEFGHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "ABCDEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "UVWXVZABCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OPQRSTUVWXYZABCDEFGH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "IJKLMNOPQRSTUVWXYZAB",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "CDEFGHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 6,
+          "word": "WXYZABCDEFGHIJKLMNOP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 7,
+          "word": "QRSTUVWXYZABCDEFGHIJ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 8,
+          "word": "KLMNOPQRSTUVWXYZABCD",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 9,
+          "word": "EFGHIJKLMNOPQRSTUVWX",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 10,
+          "word": "YZABCDEFGHIJKLMNOPQR",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 11,
+          "word": "STUVWXYZABCDEFGHIJKL",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 12,
+          "word": "MNOPQRSTUVWXYZABCDEF",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 13,
+          "word": "GHIJKLMNOPQRSTUVWXYZ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 14,
+          "word": "ABCDEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 15,
+          "word": "UVWXYZABCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 16,
+          "word": "OPQRSTUVWXYZABCDEPGH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 17,
+          "word": "IJKLMNOPQRSTUVWXYZAB",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 18,
+          "word": "CDEFGHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 19,
+          "word": "WXXZABCDEFGHIJKLMNOP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 20,
+          "word": "QRSTUVWXYZABCDEFGHIJ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        }
+      ]
+    },
+    {
+      "sheet_name": "03_horizontal_seq_027.jpg",
+      "category_dir": "03_horizontal_seq",
+      "category_label": "Horizontal (เขียนเรียงตัวอักษร A-Z)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 357.35,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 0,
+      "normal_char_cells": 400,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 89.97,
+      "phase1_ms": 621.8,
+      "phase2_ms": 310.8,
+      "phase3_ms": 1517.9,
+      "phase4_ms": 538.8,
+      "total_ms": 3106.7,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_03_horizontal_seq_027.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "ABCDEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "UVWXYZABCDEFGHIJRLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OPQRSJUVWXYZABCDEFQH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "IJKLMNOPQRSTUVWSXYZA",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "BCDEFGHIJKLMNOPQRSTU",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "ABCDEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "UVWXYZABCDEFGHIJRLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OPQRSJUVWXYZABCDEFQH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "IJKLMNOPQRSTUVWSXYZA",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "BCDEFGHIJKLMNOPQRSTU",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 6,
+          "word": "VWXYZABCDEFGHIJKLMNO",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 7,
+          "word": "PQRSTUVWXYZABCDEFGHI",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 8,
+          "word": "JKMNOPQRSTUVWXYZABCD",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 9,
+          "word": "EFGHIJKLMNOPQRSTUVWX",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 10,
+          "word": "YZABCDEFGHIJKLMNOPQR",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 11,
+          "word": "STUVWXYZABCDEFGHIJKL",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 12,
+          "word": "MNOPQRSTUVWXYZABCDEF",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 13,
+          "word": "GHIJKLMNOPQRSTUVWXYZ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 14,
+          "word": "ABCDEFGHIJKLMNOPQRST",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 15,
+          "word": "UVWXYZABCDEFGHIJKLMN",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 16,
+          "word": "OPQRSTUVWXYZABCDEFGH",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 17,
+          "word": "IJKLMNOPQRSTUVWXYZAB",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 18,
+          "word": "CDEFQHIJKLMNOPQRSTUV",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 19,
+          "word": "WXYZABCDEFGHIJKLMNOP",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 20,
+          "word": "QRSTUVWXYZABCDEFGHIJ",
+          "valid_chars": 20,
+          "strikethrough_removed": 0
+        }
+      ]
+    },
+    {
+      "sheet_name": "04_words_vocab_001.jpg",
+      "category_dir": "04_words_vocab",
+      "category_label": "Words (เขียนเป็นคำศัพท์ภาษาอังกฤษ)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 359.36,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 274,
+      "normal_char_cells": 126,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 89.23,
+      "phase1_ms": 693.3,
+      "phase2_ms": 310.4,
+      "phase3_ms": 1173.8,
+      "phase4_ms": 187.0,
+      "total_ms": 2487.3,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_04_words_vocab_001.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "FOREST",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "MOUNTAIN",
+          "valid_chars": 8,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OCEAN",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "WATERFALL",
+          "valid_chars": 9,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "LAKE",
+          "valid_chars": 4,
+          "strikethrough_removed": 0
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "FOREST",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "MOUNTAIN",
+          "valid_chars": 8,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "OCEAN",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "WATERFALL",
+          "valid_chars": 9,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "LAKE",
+          "valid_chars": 4,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 6,
+          "word": "ISLAND",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 7,
+          "word": "BEACH",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 8,
+          "word": "DESERT",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 9,
+          "word": "VALLEY",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 10,
+          "word": "MEADOW",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 11,
+          "word": "GLACIER",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 12,
+          "word": "VOLCANO",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 13,
+          "word": "CANYON",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 14,
+          "word": "CAVE",
+          "valid_chars": 4,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 15,
+          "word": "RAINBOW",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 16,
+          "word": "SUNSET",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 17,
+          "word": "BREEZE",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 18,
+          "word": "WILDERNESS",
+          "valid_chars": 10,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 19,
+          "word": "SUNRISE",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 20,
+          "word": "WHITE",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        }
+      ]
+    },
+    {
+      "sheet_name": "04_words_vocab_004.jpg",
+      "category_dir": "04_words_vocab",
+      "category_label": "Words (เขียนเป็นคำศัพท์ภาษาอังกฤษ)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 359.44,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 162,
+      "normal_char_cells": 238,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 87.07,
+      "phase1_ms": 621.3,
+      "phase2_ms": 302.3,
+      "phase3_ms": 1200.8,
+      "phase4_ms": 361.7,
+      "total_ms": 2602.4,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_04_words_vocab_004.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "DFTERMINEDLY",
+          "valid_chars": 12,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "RESOURCEFULNESS",
+          "valid_chars": 15,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "MINDFULNESS",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "TRANQUILITY",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "SFRENDIPIIY",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "DFTERMINEDLY",
+          "valid_chars": 12,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "RESOURCEFULNESS",
+          "valid_chars": 15,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "MINDFULNESS",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "TRANQUILITY",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "SFRENDIPIIY",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 6,
+          "word": "EUPHORIA",
+          "valid_chars": 8,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 7,
+          "word": "MELANCHOLY",
+          "valid_chars": 10,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 8,
+          "word": "NOSTALGIA",
+          "valid_chars": 9,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 9,
+          "word": "EPIPHANY",
+          "valid_chars": 8,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 10,
+          "word": "RENAISSANCE",
+          "valid_chars": 11,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 11,
+          "word": "CONSTELLATION",
+          "valid_chars": 13,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 12,
+          "word": "INTERSTELLAR",
+          "valid_chars": 12,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 13,
+          "word": "ASTRONOMICAL",
+          "valid_chars": 12,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 14,
+          "word": "SUPERNATURAL",
+          "valid_chars": 12,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 15,
+          "word": "EXTRTERRESTRJAL",
+          "valid_chars": 15,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 16,
+          "word": "HYPERSENSITIVE",
+          "valid_chars": 14,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 17,
+          "word": "LYBERSECURITY",
+          "valid_chars": 13,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 18,
+          "word": "CRYPTOGRAPHY",
+          "valid_chars": 12,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 19,
+          "word": "DECENTRALIZED",
+          "valid_chars": 13,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 20,
+          "word": "MULTIDIMENSIONAL",
+          "valid_chars": 16,
+          "strikethrough_removed": 0
+        }
+      ]
+    },
+    {
+      "sheet_name": "04_words_vocab_011.jpg",
+      "category_dir": "04_words_vocab",
+      "category_label": "Words (เขียนเป็นคำศัพท์ภาษาอังกฤษ)",
+      "raw_resolution": "3024x4032",
+      "orientation_angle_deg": 0.04,
+      "fiducials_detected": 3,
+      "left_timing_bars": 20,
+      "right_timing_bars": 20,
+      "header_42_align_pct": 100.0,
+      "omr_7_align_pct": 100.0,
+      "empty_cells": 278,
+      "normal_char_cells": 122,
+      "strikethrough_cells": 0,
+      "mean_hcr_confidence_pct": 84.89,
+      "phase1_ms": 675.3,
+      "phase2_ms": 335.0,
+      "phase3_ms": 1163.2,
+      "phase4_ms": 212.4,
+      "total_ms": 2504.4,
+      "visual_path": "metrics\\visuals\\full_pipeline_test\\test_04_words_vocab_011.jpg",
+      "sample_rows": [
+        {
+          "row": 1,
+          "word": "SHADOW",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "DFSTJNY",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "LEGFND",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "MYSTFRY",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "IMNFINITY",
+          "valid_chars": 9,
+          "strikethrough_removed": 0
+        }
+      ],
+      "all_rows": [
+        {
+          "row": 1,
+          "word": "SHADOW",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 2,
+          "word": "DFSTJNY",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 3,
+          "word": "LEGFND",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 4,
+          "word": "MYSTFRY",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 5,
+          "word": "IMNFINITY",
+          "valid_chars": 9,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 6,
+          "word": "PHOENIX",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 7,
+          "word": "DRAGON",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 8,
+          "word": "WARRIOR",
+          "valid_chars": 7,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 9,
+          "word": "KNIOHT",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 10,
+          "word": "AOGEL",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 11,
+          "word": "DFMON",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 12,
+          "word": "HEAVEN",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 13,
+          "word": "CHAQS",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 14,
+          "word": "SPIRIT",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 15,
+          "word": "DREAM",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 16,
+          "word": "SILENT",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 17,
+          "word": "LQNELY",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 18,
+          "word": "BROKEN",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 19,
+          "word": "FALLEN",
+          "valid_chars": 6,
+          "strikethrough_removed": 0
+        },
+        {
+          "row": 20,
+          "word": "BRAVE",
+          "valid_chars": 5,
+          "strikethrough_removed": 0
+        }
+      ]
+    }
+  ]
+}
