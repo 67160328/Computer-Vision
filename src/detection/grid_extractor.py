@@ -145,7 +145,7 @@ class Template2GridExtractor:
     def __init__(
         self,
         inner_margin_px: int = 8,
-        empty_ink_threshold: float = 0.012,
+        empty_ink_threshold: float = 0.008,
         cla_dark_threshold: int = 160,
         cla_filled_threshold: float = 0.45,
         omr_ncc_align_threshold: float = 0.25,
@@ -168,18 +168,23 @@ class Template2GridExtractor:
     ) -> Tuple[np.ndarray, int]:
         """
         สแกนหาขีดดำบอกตำแหน่งข้อ 1-20 ในแถบแนวตั้ง [x_min, x_max] แบบ Dynamic Pitch-Sorted
+        รองรับกรณีมีแสงสะท้อนหรือรอยพับพาดผ่านขีดดำด้วย Morphological Closing เชื่อมขีดก่อนทำ Opening
         """
         y_top, y_bot = 800, 3230
         roi = norm_gray[y_top:y_bot, x_min:x_max]
-        dark = (roi < 165).astype(np.uint8) * 255
-        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (25, 7))
+        dark = (roi < 178).astype(np.uint8) * 255
+        # เชื่อมรอยขาดแนวนอน/แนวตั้งเล็กๆ บนขีดดำที่เกิดจากแสงสะท้อน
+        dark = cv2.morphologyEx(
+            dark, cv2.MORPH_CLOSE, cv2.getStructuringElement(cv2.MORPH_RECT, (11, 7))
+        )
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (22, 7))
         dark_bars = cv2.morphologyEx(dark, cv2.MORPH_OPEN, kernel)
 
         cnts, _ = cv2.findContours(dark_bars, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cands = []
         for c in cnts:
             x, y, bw, bh = cv2.boundingRect(c)
-            if 28 <= bw <= 92 and 10 <= bh <= 45:
+            if 22 <= bw <= 95 and 9 <= bh <= 45:
                 M = cv2.moments(c)
                 if M["m00"] > 0:
                     cx = x_min + M["m10"] / M["m00"]
@@ -199,7 +204,14 @@ class Template2GridExtractor:
         raw_found_count = min(self.NUM_QUESTIONS, len(dedup))
 
         if len(dedup) == self.NUM_QUESTIONS:
-            return np.array(dedup, dtype=np.float32), 20
+            pts_arr = np.array(dedup, dtype=np.float32)
+            # ปรับเส้นตรงแกน X ด้วย Linear Fit (Robust Medians) เพื่อป้องกันปลายขีดที่แหว่งหรือเชื่อมกับตัวเลขข้อมาดึง X เพี้ยน
+            slope_x, intercept_x = np.polyfit(pts_arr[:, 1], pts_arr[:, 0], 1)
+            for i in range(self.NUM_QUESTIONS):
+                pred_x = intercept_x + slope_x * pts_arr[i, 1]
+                if abs(pts_arr[i, 0] - pred_x) > 12.0:
+                    pts_arr[i, 0] = pred_x
+            return pts_arr, 20
 
         matched = np.zeros((self.NUM_QUESTIONS, 2), dtype=np.float32)
         if len(dedup) >= 2:
@@ -232,29 +244,31 @@ class Template2GridExtractor:
     ) -> Tuple[int, int, int, int]:
         """
         Layer 1 (2D Local Grid-Line Snap):
-        ค้นหาเส้นขอบตารางทั้งแนวนอน (บน-ล่าง) และแนวตั้ง (ซ้าย-ขวา) จริงของช่องในรัศมี +-22 px
+        ค้นหาเส้นขอบตารางทั้งแนวนอน (บน-ล่าง) และแนวตั้ง (ซ้าย-ขวา) จริงของช่องในรัศมี +-18 px
+        โดยเฉพาะแกน Y จะวัดความต่อเนื่องของเส้นตารางแนวนอนคลุมช่วงกว้าง +-180 px เพื่อไม่ให้เส้นขีดฆ่า 2 เส้น (`=`) หรือตัวอักษรในช่องเดียวหลอกตำแหน่งขอบตาราง!
         """
         h_img, w_img = norm_gray.shape
-        search_pad = 22
+        search_pad = 18
 
-        # 1. Snap แกน Y (ขอบบน - ขอบล่าง)
+        # 1. Snap แกน Y (ขอบบน - ขอบล่าง) โดยดูแถบแนวนอนกว้าง +-180 px รอบช่อง
         y1 = int(round(pred_y_center - half_h))
         y2 = int(round(pred_y_center + half_h + 1))
         sy1 = max(0, y1 - search_pad)
         sy2 = min(h_img, y2 + search_pad)
-        sx1 = max(0, col_x1 + 12)
-        sx2 = min(w_img, col_x2 - 12)
+        sx1 = max(250, col_x1 - 140)
+        sx2 = min(2240, col_x2 + 140)
 
-        if sy2 - sy1 > 40 and sx2 - sx1 > 20:
+        if sy2 - sy1 > 40 and sx2 - sx1 > 60:
             strip_y = norm_gray[sy1:sy2, sx1:sx2]
             row_darkness = 255.0 - np.mean(strip_y, axis=1)
             mid_y = len(row_darkness) // 2
-            top_reg = row_darkness[: max(1, mid_y - 18)]
-            bot_reg = row_darkness[min(len(row_darkness) - 1, mid_y + 18) :]
+            # บังคับให้ขอบบนอยู่ห่างจากจุดกึ่งกลางอย่างน้อย 28 px เพื่อข้ามเส้นขีดฆ่าคู่ (=) ที่อยู่กลางช่อง!
+            top_reg = row_darkness[: max(1, mid_y - 28)]
+            bot_reg = row_darkness[min(len(row_darkness) - 1, mid_y + 28) :]
             if len(top_reg) > 0 and len(bot_reg) > 0:
                 t_pk = int(np.argmax(top_reg))
-                b_pk = int(np.argmax(bot_reg)) + min(len(row_darkness) - 1, mid_y + 18)
-                if top_reg[t_pk] > 18.0 and row_darkness[b_pk] > 18.0 and (64 <= b_pk - t_pk <= 96):
+                b_pk = int(np.argmax(bot_reg)) + min(len(row_darkness) - 1, mid_y + 28)
+                if top_reg[t_pk] > 18.0 and row_darkness[b_pk] > 18.0 and (68 <= b_pk - t_pk <= 92):
                     y1 = sy1 + t_pk
                     y2 = sy1 + b_pk
 
@@ -269,11 +283,11 @@ class Template2GridExtractor:
             strip_x = norm_gray[vy1:vy2, vx1:vx2]
             col_darkness = 255.0 - np.mean(strip_x, axis=0)
             mid_x = len(col_darkness) // 2
-            left_reg = col_darkness[: max(1, mid_x - 20)]
-            right_reg = col_darkness[min(len(col_darkness) - 1, mid_x + 20) :]
+            left_reg = col_darkness[: max(1, mid_x - 28)]
+            right_reg = col_darkness[min(len(col_darkness) - 1, mid_x + 28) :]
             if len(left_reg) > 0 and len(right_reg) > 0:
                 l_pk = int(np.argmax(left_reg))
-                r_pk = int(np.argmax(right_reg)) + min(len(col_darkness) - 1, mid_x + 20)
+                r_pk = int(np.argmax(right_reg)) + min(len(col_darkness) - 1, mid_x + 28)
                 expected_w = col_x2 - col_x1
                 if (
                     left_reg[l_pk] > 18.0
@@ -287,7 +301,10 @@ class Template2GridExtractor:
 
     def _clean_cell_patch(self, raw_cell: np.ndarray) -> Tuple[np.ndarray, float]:
         """
-        Layer 2 & Layer 3 (Morphological Grid-Line Subtraction + Core-Zone Ink Measurement)
+        Layer 2 & Layer 3 (Rim-Restricted Morphological Grid-Line Subtraction + Core-Zone Ink Measurement):
+        - ลบเฉพาะเส้นขอบตารางที่แลบเข้ามาในโซนขอบ (Rim 10 px บน/ล่าง, 14 px ซ้าย/ขวา) เท่านั้น!
+          เพื่อรักษาเส้นขีดฆ่าแนวนอน 2 เส้นขนาน (`=`) หรือกากบาท (`X`) ที่พาดผ่านกลางช่องไว้ครบ 100%
+        - กรองจุดฝุ่นขนาดเล็ก (< 26 px) ออกจากการวัดสัดส่วนหมึกใน Core Zone
         """
         h, w = raw_cell.shape
         m = self.inner_margin_px
@@ -297,40 +314,38 @@ class Template2GridExtractor:
             cropped = raw_cell.copy()
 
         ch, cw = cropped.shape
-        ink_mask = (cropped < 150).astype(np.uint8) * 255
-
-        h_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (max(15, int(cw * 0.65)), 1))
-        v_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, max(15, int(ch * 0.72))))
-        horiz_lines = cv2.morphologyEx(ink_mask, cv2.MORPH_OPEN, h_kernel)
-        vert_lines = cv2.morphologyEx(ink_mask, cv2.MORPH_OPEN, v_kernel)
+        ink_mask = (cropped < 184).astype(np.uint8) * 255
 
         rim_mask = np.zeros_like(ink_mask)
-        rim_y, rim_x = 12, 18
+        rim_y, rim_x = 11, 16
         rim_mask[:rim_y, :] = 255
         rim_mask[ch - rim_y :, :] = 255
         rim_mask[:, :rim_x] = 255
         rim_mask[:, cw - rim_x :] = 255
 
-        border_lines = ((horiz_lines > 0) | (vert_lines > 0)) & (rim_mask > 0)
+        h_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (max(15, int(cw * 0.65)), 1))
+        v_kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1, max(15, int(ch * 0.72))))
+        horiz_lines = cv2.morphologyEx(ink_mask & rim_mask, cv2.MORPH_OPEN, h_kernel)
+        vert_lines = cv2.morphologyEx(ink_mask & rim_mask, cv2.MORPH_OPEN, v_kernel)
+
+        border_lines = (horiz_lines > 0) | (vert_lines > 0)
         ink_mask[border_lines] = 0
         cropped[border_lines] = 255
 
         num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(ink_mask, connectivity=8)
         for lbl in range(1, num_labels):
             x, y, bw, bh, area = stats[lbl]
-            if area < 14:
+            is_tiny_dust = (area < 14) or (area < 42 and max(bw, bh) <= 10)
+            if is_tiny_dust:
                 ink_mask[labels == lbl] = 0
                 continue
-            spans_full_height = (y <= 2) and (y + bh >= ch - 2) and (bw <= 10)
-            spans_full_width = (x <= 2) and (x + bw >= cw - 2) and (bh <= 10)
-            touches_top_or_bot = (y <= 3) or (y + bh >= ch - 3)
-            touches_left_or_right = (x <= 3) or (x + bw >= cw - 3)
-            if (
-                spans_full_height
-                or spans_full_width
-                or (touches_top_or_bot and bh <= 9)
-                or (touches_left_or_right and bw <= 9)
-            ):
+            strictly_in_rim = (
+                (y + bh <= 10)
+                or (y >= ch - 10)
+                or (x + bw <= 15)
+                or (x >= cw - 15)
+            )
+            if strictly_in_rim:
                 cropped[labels == lbl] = 255
                 ink_mask[labels == lbl] = 0
 
@@ -346,7 +361,7 @@ class Template2GridExtractor:
     ) -> Tuple[Dict[str, List[np.ndarray]], Dict[str, List[HeaderCellInfo]], int]:
         """
         ตรวจจับช่องรหัสประจำตัว (14 ช่อง), รหัสวิชา (14 ช่อง), และรหัสสถานศึกษา (14 ช่อง) รวม 42 ช่อง
-        ด้วย Direct White-Interior Contour Detection + 2D Local Border Verification
+        ด้วย Multi-Threshold Direct White-Interior Contour Detection + 2D Local Border Verification
         หากช่องใดตรงกับขอบตารางจริง -> is_aligned = True (วาดสีม่วง)
         หากช่องใดไม่ตรงกับขอบตารางจริง -> is_aligned = False (วาดสีเหลืองส้มสว่าง)
         """
@@ -354,21 +369,37 @@ class Template2GridExtractor:
         ry_min, ry_max = 170, 865
         roi = norm_gray[ry_min:ry_max, rx_min:rx_max]
 
-        # Binarize เพื่อแยกพื้นขาวในช่องรหัสออกจากเส้นขอบตารางสีดำ แล้ว Erode 3x3 เพื่อแยกแต่ละช่องออกจากกัน
-        _, bin_w = cv2.threshold(roi, 185, 255, cv2.THRESH_BINARY)
-        bin_eroded = cv2.erode(bin_w, np.ones((3, 3), np.uint8), iterations=1)
-        cnts, _ = cv2.findContours(bin_eroded, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
+        # ทดลองหา White-Interior Contour ด้วยระดับความสว่าง 185, 195, 205 (รองรับทั้งภาพความละเอียดสูงและภาพบีบอัดที่เส้นขอบจาง)
+        valid_clusters: List[List[Tuple[int, int, int, int]]] = []
+        for t_val in [185, 195, 205]:
+            _, bin_w = cv2.threshold(roi, t_val, 255, cv2.THRESH_BINARY)
+            bin_eroded = cv2.erode(bin_w, np.ones((3, 3), np.uint8), iterations=1)
+            cnts, _ = cv2.findContours(bin_eroded, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 
-        detected_boxes = []
-        for c in cnts:
-            x, y, bw, bh = cv2.boundingRect(c)
-            if 55 <= bw <= 95 and 55 <= bh <= 96:
-                # ชดเชยระยะ Erosion 1 px กลับไปที่ขอบเส้นตารางจริง
-                gx1 = rx_min + x - 1
-                gy1 = ry_min + y - 1
-                gx2 = gx1 + bw + 2
-                gy2 = gy1 + bh + 2
-                detected_boxes.append((gx1, gy1, gx2, gy2))
+            detected_boxes = []
+            for c in cnts:
+                x, y, bw, bh = cv2.boundingRect(c)
+                if 55 <= bw <= 95 and 55 <= bh <= 96:
+                    gx1 = rx_min + x - 1
+                    gy1 = ry_min + y - 1
+                    gx2 = gx1 + bw + 2
+                    gy2 = gy1 + bh + 2
+                    detected_boxes.append((gx1, gy1, gx2, gy2))
+
+            detected_boxes.sort(key=lambda b: 0.5 * (b[1] + b[3]))
+            row_clusters: List[List[Tuple[int, int, int, int]]] = []
+            for b in detected_boxes:
+                cy = 0.5 * (b[1] + b[3])
+                if not row_clusters or abs(cy - np.mean([0.5 * (item[1] + item[3]) for item in row_clusters[-1]])) > 65.0:
+                    row_clusters.append([b])
+                else:
+                    row_clusters[-1].append(b)
+
+            cand_clusters = [c for c in row_clusters if len(c) >= 8]
+            if sum(len(c) for c in cand_clusters[:3]) > sum(len(c) for c in valid_clusters[:3]):
+                valid_clusters = cand_clusters
+            if len(valid_clusters) >= 3 and all(len(c) == 14 for c in valid_clusters[:3]):
+                break
 
         header_ids: Dict[str, List[np.ndarray]] = {}
         header_info: Dict[str, List[HeaderCellInfo]] = {}
@@ -379,19 +410,6 @@ class Template2GridExtractor:
             ("subject_id", self.HEADER_ID_ROWS["subject_id"]),
             ("school_id", self.HEADER_ID_ROWS["school_id"]),
         ]
-
-        # จัดกลุ่มกล่องที่ตรวจพบเข้าสู่ 3 แถวตามแกน Y
-        detected_boxes.sort(key=lambda b: 0.5 * (b[1] + b[3]))
-        row_clusters: List[List[Tuple[int, int, int, int]]] = []
-        for b in detected_boxes:
-            cy = 0.5 * (b[1] + b[3])
-            if not row_clusters or abs(cy - np.mean([0.5 * ( item[1] + item[3] ) for item in row_clusters[-1]])) > 65.0:
-                row_clusters.append([b])
-            else:
-                row_clusters[-1].append(b)
-
-        # คัดเฉพาะคลัสเตอร์ที่มีอย่างน้อย 8 ช่อง (ซึ่งคือแถวรหัสทั้ง 3 แถว)
-        valid_clusters = [c for c in row_clusters if len(c) >= 8]
 
         for f_idx, (field_name, (can_y1, can_y2)) in enumerate(field_order):
             cluster = valid_clusters[f_idx] if f_idx < len(valid_clusters) else []
@@ -604,7 +622,7 @@ class Template2GridExtractor:
 
         # 1. สแกนหาขีดดำบอกตำแหน่งข้อ 1-20 ด้านซ้ายและขวา
         left_centers, left_raw_cnt = self._detect_timing_bars_side(
-            rectified_norm_gray, x_min=70, x_max=215, default_x=self.CANONICAL_LEFT_X
+            rectified_norm_gray, x_min=65, x_max=218, default_x=self.CANONICAL_LEFT_X
         )
         right_centers, right_raw_cnt = self._detect_timing_bars_side(
             rectified_norm_gray, x_min=2270, x_max=2430, default_x=self.CANONICAL_RIGHT_X

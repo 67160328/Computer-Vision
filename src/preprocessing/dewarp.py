@@ -98,87 +98,105 @@ class FiducialDewarper:
         """
         สกัดหน้ากากของแผ่นกระดาษสีขาวออกจากพื้นหลังโต๊ะ
         คืนค่า: (paper_inner_mask, paper_contour, paper_area)
+        รองรับทั้งภาพถ่ายติดพื้นหลังโต๊ะไม้ และภาพถ่ายระยะใกล้ (Close-up) ที่เส้นตารางดำเข้มอาจตัดแบ่งครึ่งหน้ากระดาษ
         """
+        h, w = small_gray.shape
+        img_area = float(h * w)
+
         blur = cv2.GaussianBlur(small_gray, (5, 5), 0)
         _, paper_bin = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        # ใช้ Morphological Closing ขนาดใหญ่เชื่อมเส้นตารางและตัวอักษรไม่ให้ตัดแผ่นกระดาษขาดออกจากกัน
+        paper_bin = cv2.morphologyEx(paper_bin, cv2.MORPH_CLOSE, np.ones((25, 25), np.uint8))
         cnts, _ = cv2.findContours(paper_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         if not cnts:
-            h, w = small_gray.shape
             full_mask = np.ones_like(small_gray) * 255
-            return full_mask, None, float(h * w)
+            return full_mask, None, img_area
 
         paper_c = max(cnts, key=cv2.contourArea)
-        paper_area = float(cv2.contourArea(paper_c))
-        h, w = small_gray.shape
+        hull_c = cv2.convexHull(paper_c)
+        paper_area = float(cv2.contourArea(hull_c))
 
-        if paper_area < 0.15 * (h * w):
+        if paper_area < 0.25 * img_area:
             full_mask = np.ones_like(small_gray) * 255
-            return full_mask, None, float(h * w)
+            return full_mask, None, img_area
 
         paper_mask = np.zeros_like(small_gray)
-        cv2.drawContours(paper_mask, [paper_c], -1, 255, -1)
+        cv2.drawContours(paper_mask, [hull_c], -1, 255, -1)
         kernel = np.ones((5, 5), np.uint8)
         paper_inner = cv2.erode(paper_mask, kernel, iterations=2)
-        return paper_inner, paper_c, paper_area
+        return paper_inner, hull_c, paper_area
 
     def _detect_three_markers(
         self, small_gray: np.ndarray, paper_inner: np.ndarray, paper_area: float
     ) -> Tuple[List[Dict], np.ndarray]:
         """
         ค้นหาหมุดสี่เหลี่ยมดำ 3 มุมภายในเขตกระดาษด้วย Illumination Normalization + External Contour
+        พร้อม Fallback ค้นหาทั่วทั้งภาพและรองรับแสงสะท้อนบนหมุดดำ (Threshold 165 -> 185)
         """
         norm = self.normalize_illumination(small_gray, sigma=35.0)
-        dark_bin = ((norm < 165) & (paper_inner > 0)).astype(np.uint8) * 255
-        dark_bin = cv2.morphologyEx(dark_bin, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+        h, w = small_gray.shape
+        img_area = float(h * w)
 
-        d_cnts, _ = cv2.findContours(dark_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        candidates = []
+        for use_mask, thresh_val in [(True, 165), (True, 182), (False, 182)]:
+            if use_mask:
+                dark_bin = ((norm < thresh_val) & (paper_inner > 0)).astype(np.uint8) * 255
+                ref_area = paper_area
+            else:
+                dark_bin = (norm < thresh_val).astype(np.uint8) * 255
+                ref_area = max(paper_area, 0.75 * img_area)
 
-        for c in d_cnts:
-            area = float(cv2.contourArea(c))
-            if self.min_marker_area_ratio * paper_area <= area <= self.max_marker_area_ratio * paper_area:
-                hull_area = float(cv2.contourArea(cv2.convexHull(c)))
-                solidity = area / (hull_area + 1e-5)
-                rect = cv2.minAreaRect(c)
-                rw, rh = rect[1]
-                if rw > 0 and rh > 0:
-                    aspect = max(rw, rh) / min(rw, rh)
-                    if solidity >= self.min_solidity and aspect <= self.max_aspect_ratio:
-                        M = cv2.moments(c)
-                        if M["m00"] > 0:
-                            cx = float(M["m10"] / M["m00"])
-                            cy = float(M["m01"] / M["m00"])
-                        else:
-                            cx, cy = float(rect[0][0]), float(rect[0][1])
+            dark_bin = cv2.morphologyEx(dark_bin, cv2.MORPH_CLOSE, np.ones((3, 3), np.uint8))
+            d_cnts, _ = cv2.findContours(dark_bin, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+            candidates = []
 
-                        x, y, bw, bh = cv2.boundingRect(c)
-                        pad_x = max(2, int(bw * 0.20))
-                        pad_y = max(2, int(bh * 0.20))
-                        roi_norm = norm[y + pad_y : y + bh - pad_y, x + pad_x : x + bw - pad_x]
-                        internal_std = float(np.std(roi_norm)) if roi_norm.size > 0 else 0.0
+            for c in d_cnts:
+                area = float(cv2.contourArea(c))
+                if self.min_marker_area_ratio * ref_area <= area <= self.max_marker_area_ratio * ref_area:
+                    hull_area = float(cv2.contourArea(cv2.convexHull(c)))
+                    solidity = area / (hull_area + 1e-5)
+                    rect = cv2.minAreaRect(c)
+                    rw, rh = rect[1]
+                    if rw > 0 and rh > 0:
+                        aspect = max(rw, rh) / min(rw, rh)
+                        if solidity >= self.min_solidity and aspect <= self.max_aspect_ratio:
+                            M = cv2.moments(c)
+                            if M["m00"] > 0:
+                                cx = float(M["m10"] / M["m00"])
+                                cy = float(M["m01"] / M["m00"])
+                            else:
+                                cx, cy = float(rect[0][0]), float(rect[0][1])
 
-                        candidates.append({
-                            "contour": c,
-                            "area": area,
-                            "center": np.array([cx, cy], dtype=np.float32),
-                            "solidity": solidity,
-                            "aspect": aspect,
-                            "internal_std": internal_std,
-                        })
+                            x, y, bw, bh = cv2.boundingRect(c)
+                            pad_x = max(2, int(bw * 0.20))
+                            pad_y = max(2, int(bh * 0.20))
+                            roi_norm = norm[y + pad_y : y + bh - pad_y, x + pad_x : x + bw - pad_x]
+                            internal_std = float(np.std(roi_norm)) if roi_norm.size > 0 else 0.0
 
-        candidates.sort(key=lambda item: item["area"], reverse=True)
-        if len(candidates) > 3:
-            best_triplet = candidates[:3]
-            best_score = float("inf")
-            for i in range(len(candidates) - 2):
-                triplet = candidates[i : i + 3]
-                areas = [t["area"] for t in triplet]
-                rel_diff = (max(areas) - min(areas)) / (np.mean(areas) + 1e-5)
-                if rel_diff < best_score:
-                    best_score = rel_diff
-                    best_triplet = triplet
-            candidates = best_triplet
+                            candidates.append({
+                                "contour": c,
+                                "area": area,
+                                "center": np.array([cx, cy], dtype=np.float32),
+                                "solidity": solidity,
+                                "aspect": aspect,
+                                "internal_std": internal_std,
+                            })
+
+            candidates.sort(key=lambda item: item["area"], reverse=True)
+            if len(candidates) > 3:
+                best_triplet = candidates[:3]
+                best_score = float("inf")
+                for i in range(len(candidates) - 2):
+                    triplet = candidates[i : i + 3]
+                    areas = [t["area"] for t in triplet]
+                    rel_diff = (max(areas) - min(areas)) / (np.mean(areas) + 1e-5)
+                    if rel_diff < best_score:
+                        best_score = rel_diff
+                        best_triplet = triplet
+                candidates = best_triplet
+
+            if len(candidates) == 3:
+                break
 
         return candidates, norm
 
@@ -327,28 +345,28 @@ class FiducialDewarper:
 
             bg = cv2.GaussianBlur(roi, (0, 0), sigmaX=45)
             norm = cv2.divide(roi, bg, scale=255)
-            dark = (norm < 165).astype(np.uint8) * 255
-            dark = cv2.morphologyEx(dark, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
-            cnts, _ = cv2.findContours(dark, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-            if not cnts:
-                continue
-
             best_c = None
             best_dist = float("inf")
             target_pt = np.array([cx - x1, cy - y1], dtype=np.float32)
 
-            for c in cnts:
-                area = cv2.contourArea(c)
-                if area < 1500:
-                    continue
-                M = cv2.moments(c)
-                if M["m00"] > 0:
-                    mcx = M["m10"] / M["m00"]
-                    mcy = M["m01"] / M["m00"]
-                    dist = np.hypot(mcx - target_pt[0], mcy - target_pt[1])
-                    if dist < best_dist:
-                        best_dist = dist
-                        best_c = (mcx, mcy)
+            for t_val in [165, 182]:
+                dark = (norm < t_val).astype(np.uint8) * 255
+                dark = cv2.morphologyEx(dark, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+                cnts, _ = cv2.findContours(dark, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                for c in cnts:
+                    area = cv2.contourArea(c)
+                    if area < 800:
+                        continue
+                    M = cv2.moments(c)
+                    if M["m00"] > 0:
+                        mcx = M["m10"] / M["m00"]
+                        mcy = M["m01"] / M["m00"]
+                        dist = np.hypot(mcx - target_pt[0], mcy - target_pt[1])
+                        if dist < best_dist:
+                            best_dist = dist
+                            best_c = (mcx, mcy)
+                if best_c is not None and best_dist < 40.0:
+                    break
 
             if best_c is not None and best_dist < 40.0:
                 refined[idx, 0] = float(x1 + best_c[0])
@@ -371,19 +389,21 @@ class FiducialDewarper:
             x1, x2 = int(exp_x - patch_r), int(exp_x + patch_r)
             y1, y2 = int(exp_y - patch_r), int(exp_y + patch_r)
             roi = rectified_norm_gray[y1:y2, x1:x2]
-            dark = (roi < 165).astype(np.uint8) * 255
-            dark = cv2.morphologyEx(dark, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
-            cnts, _ = cv2.findContours(dark, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-
             found_pt = None
             best_area = 0.0
-            for c in cnts:
-                area = cv2.contourArea(c)
-                if 12000 <= area <= 32000 and area > best_area:
-                    M = cv2.moments(c)
-                    if M["m00"] > 0:
-                        best_area = area
-                        found_pt = (x1 + M["m10"] / M["m00"], y1 + M["m01"] / M["m00"])
+            for t_val in [165, 182]:
+                dark = (roi < t_val).astype(np.uint8) * 255
+                dark = cv2.morphologyEx(dark, cv2.MORPH_CLOSE, np.ones((5, 5), np.uint8))
+                cnts, _ = cv2.findContours(dark, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+                for c in cnts:
+                    area = cv2.contourArea(c)
+                    if 10000 <= area <= 35000 and area > best_area:
+                        M = cv2.moments(c)
+                        if M["m00"] > 0:
+                            best_area = area
+                            found_pt = (x1 + M["m10"] / M["m00"], y1 + M["m01"] / M["m00"])
+                if found_pt is not None:
+                    break
 
             if found_pt is not None:
                 err_sq = (found_pt[0] - exp_x) ** 2 + (found_pt[1] - exp_y) ** 2
