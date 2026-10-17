@@ -77,11 +77,18 @@
 - **Strikethrough Precision / Recall:** **`100.0% / 100.0%` (F1 = 1.000)** บนชุดทดสอบขีดฆ่าจริง
 - **Normal Character Invariance:** ตัวอักษรปกติที่มีเส้นขนานเช่น `F` และ `Z` ไม่ถูกตรวจจับผิดพลาดเลยแม้แต่ช่องเดียว (**`FPR = 0.0%`**)
 
-### Phase 4: Handwritten Character Recognition (HCR CNN Engine)
+### Phase 4: Handwritten Character Recognition (A–Z HCR CNN Engine)
 - **A–Z Validation Accuracy (7,800 ตัวอย่าง):** **`Top-1 = 98.77%`**, **`Top-3 = 99.80%`**, **`Macro-F1 = 0.9879`**
 - **Real Exam Sheets Character Accuracy (786 ตัวอักษร):** **`Top-1 = 100.0% (786/786)`**, **`Top-3 = 100.0%`**, **`Macro-F1 = 1.0000`**
 - **Real Exam Word / Row Match (72 แถวคำตอบจริง):** **`100.0% (72/72 แถว)`**
 - **Row-Batch Latency (CPU):** **`19.14 ms / แถว`** ($\approx 0.96\text{ ms/ช่อง}$)
+
+### Phase 4B: Purple Box Header Digit Recognition (0–9 Digit CNN Engine — 42 ช่อง)
+- **Dataset (`data/Number Handwriter` 21,555 ภาพ, Split 80:10:10):**
+  - **Validation Accuracy (2,156 ภาพ):** **`Top-1 = 99.77%`**, **`Top-3 = 100.00%`**
+  - **Unseen Test Accuracy (2,154 ภาพ):** **`Top-1 = 99.58%`**, **`Top-3 = 99.95%`**, **`Macro-F1 = 0.9958`**
+- **Blank Purple Box Specificity (798 ช่องว่างบนกระดาษจริง 19 แผ่น):** **`100.0% (798/798 ช่อง)`**
+- **Purple Box End-to-End Digit Accuracy (รหัสประจำตัว / รหัสวิชา / รหัสสถานศึกษา):** **`100.0% (96/96 ตัวเลข, 9/9 แถวรหัส)`**
 
 ### Phase 5: Word Assembly, Lexicon Refinement & Automated Scoring
 - **Exact Match Word Accuracy (EMA):** **`99.21% (250 / 252 ข้อ)`** บน 19 กระดาษคำตอบชุดทดสอบ
@@ -110,9 +117,11 @@ Lab9/
 │   ├── detection/                       # Phase 2 & 3: Grid, OMR, Strikethrough
 │   │   ├── grid_extractor.py
 │   │   └── strikethrough_detector.py
-│   ├── recognition/                     # Phase 4: HCR Normalizer, ResNet28 & Trainer
+│   ├── recognition/                     # Phase 4 & 4B: A-Z HCR & 0-9 Header Digit CNN
 │   │   ├── char_classifier.py
-│   │   └── train_hcr.py
+│   │   ├── digit_classifier.py
+│   │   ├── train_hcr.py
+│   │   └── train_digit_hcr.py
 │   ├── grading/                         # Phase 5: Word Assembly & Automated Scoring
 │   │   └── grader.py
 │   └── evaluation/                      # สคริปต์รันประเมินผลเชิงปริมาณ
@@ -120,10 +129,12 @@ Lab9/
 │       ├── evaluate_phase2.py
 │       ├── evaluate_phase3.py
 │       ├── evaluate_phase4.py
+│       ├── evaluate_digit_header.py
 │       ├── evaluate_phase5.py
 │       └── test_full_pipeline_on_test_split.py
 ├── models/                              # โมเดล Deep Learning ที่เทรนเสร็จสมบูรณ์
-│   ├── hcr_resnet28_az.pt               # Lightweight ResNet-28 สำหรับจำแนกอักษร A-Z
+│   ├── hcr_resnet28_az.pt               # Lightweight ResNet-28 สำหรับจำแนกอักษร A-Z (26 คลาส)
+│   ├── hcr_resnet28_digits.pt           # Lightweight ResNet-28 สำหรับจำแนกตัวเลข 0-9 (10 คลาส)
 │   └── strikethrough_cnn.pt             # Hybrid CNN สำหรับจำแนกช่องว่าง/ขีดฆ่า/อักษรปกติ
 ├── metrics/                             # รายงานตัวชี้วัดเชิงปริมาณและภาพตัวอย่าง
 │   ├── README.md
@@ -131,7 +142,9 @@ Lab9/
 │   ├── Phase2_Metrics_Report.md
 │   ├── Phase3_Metrics_Report.md
 │   ├── Phase4_Metrics_Report.md
+│   ├── Phase4B_Digit_Metrics_Report.md
 │   ├── Phase5_Metrics_Report.md
+│   ├── digit_recognition_metrics.json
 │   ├── phase5_evaluation_metrics.json
 │   ├── phase5_grading_results.csv
 │   └── visuals/                         # ภาพผลลัพธ์การตรวจและให้คะแนนรายแผ่น
@@ -163,8 +176,11 @@ python src/evaluation/evaluate_phase2.py
 # Phase 3: Double Strikethrough Detection
 python src/evaluation/evaluate_phase3.py
 
-# Phase 4: Handwritten Character Recognition
+# Phase 4: Handwritten Character Recognition (A-Z)
 python src/evaluation/evaluate_phase4.py
+
+# Phase 4B: Purple Box Header Digit Recognition (0-9)
+python src/evaluation/evaluate_digit_header.py
 
 # Phase 5: End-to-End Automated Grading & Scoring
 python src/evaluation/evaluate_phase5.py

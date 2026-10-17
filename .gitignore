@@ -27,9 +27,11 @@ data/A_Z Handwritten Data/*.npz
 
 # Raw and generated datasets (Keep manifests and summaries)
 New-Dataset/
+data/Number Handwriter/
 data/dataset_splits/cells/
 data/dataset_splits/sheets_raw/
 data/dataset_splits/sheets_rectified/
+data/dataset_splits/*.npz
 !data/dataset_splits/dataset_manifest.json
 !data/dataset_splits/dataset_summary.md
 

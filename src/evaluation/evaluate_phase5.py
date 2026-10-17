@@ -157,7 +157,9 @@ def run_phase5_evaluation():
             use_top3_lexicon=True,
         )
         all_reports.append(report)
-        overlay = grader.render_graded_sheet_overlay(res1.rectified_bgr, grid, state_map, char_map, report)
+        overlay = grader.render_graded_sheet_overlay(
+            res1.rectified_bgr, grid, state_map, char_map, report, getattr(grader, "_last_header_results", None)
+        )
         out_name = orig_vis_map[fname]
         imwrite_unicode(vis_dir / out_name, overlay, quality=93)
         if artifact_dir.exists():
@@ -187,7 +189,9 @@ def run_phase5_evaluation():
                 use_top3_lexicon=True,
             )
             all_reports.append(report)
-            overlay = grader.render_graded_sheet_overlay(res1.rectified_bgr, grid, state_map, char_map, report)
+            overlay = grader.render_graded_sheet_overlay(
+                res1.rectified_bgr, grid, state_map, char_map, report, getattr(grader, "_last_header_results", None)
+            )
             out_name = f"phase5_{fname}"
             imwrite_unicode(vis_dir / out_name, overlay, quality=93)
             if artifact_dir.exists():
@@ -222,13 +226,15 @@ def run_phase5_evaluation():
     with open(csv_path, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.writer(f)
         writer.writerow([
-            "sheet_name", "category", "question_set", "page_number",
+            "sheet_name", "category", "student_id", "subject_id", "school_id",
+            "question_set", "page_number",
             "total_score", "max_score", "ema_pct", "cer_pct",
             "strikethrough_removed", "flagged_for_review", "latency_ms",
         ])
         for r in all_reports:
             writer.writerow([
-                r.image_name, r.category, r.detected_question_set, r.detected_page_number,
+                r.image_name, r.category, r.student_id, r.subject_id, r.school_id,
+                r.detected_question_set, r.detected_page_number,
                 r.total_score, r.max_possible_score, r.exact_match_accuracy_pct, r.overall_cer_pct,
                 r.total_strikethrough_removed, r.flagged_questions_count, r.total_pipeline_ms,
             ])

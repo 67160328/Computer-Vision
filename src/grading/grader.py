@@ -31,6 +31,7 @@ from src.preprocessing.dewarp import FiducialDewarper, DewarpOutput
 from src.detection.grid_extractor import Template2GridExtractor, GridExtractionOutput
 from src.detection.strikethrough_detector import StrikethroughDetectorEngine, CellStatePrediction
 from src.recognition.char_classifier import HCRModelEngine, CharPrediction, ALPHABET
+from src.recognition.digit_classifier import DigitRecognizerEngine, HeaderFieldResult, DigitCellPrediction
 
 
 def levenshtein_distance(s1: str, s2: str) -> int:
@@ -73,9 +74,14 @@ class QuestionGradeResult:
 
 @dataclass
 class SheetGradingReport:
-    """รายงานผลการตรวจกระดาษคำตอบ 1 แผ่นแบบครบวงจร (Phase 1 - 5)"""
+    """รายงานผลการตรวจกระดาษคำตอบ 1 แผ่นแบบครบวงจร (Phase 1 - 5 + Header Digits 0-9)"""
     image_name: str
     category: str
+    student_id: str                      # รหัสประจำตัวนักเรียนที่สแกนได้จากกรอบสีม่วง 14 ช่องบน
+    subject_id: str                      # รหัสวิชาที่สแกนได้จากกรอบสีม่วง 14 ช่องกลาง
+    school_id: str                       # รหัสสถานศึกษาที่สแกนได้จากกรอบสีม่วง 14 ช่องล่าง
+    header_digits_filled: int            # จำนวนช่องกรอบสีม่วงที่มีการเขียนตัวเลข (จาก 42 ช่อง)
+    header_digits_mean_conf: float       # ความมั่นใจเฉลี่ยของการอ่านตัวเลขในกรอบสีม่วง
     detected_question_set: Optional[int]
     detected_page_number: Optional[int]
     header_aligned_cells: int            # จำนวนช่องรหัสสีม่วงที่ตรงพิกัด (เต็ม 42 ช่อง)
@@ -94,6 +100,7 @@ class SheetGradingReport:
     phase2_grid_ms: float
     phase3_strikethrough_ms: float
     phase4_hcr_ms: float
+    phase4b_digit_ms: float
     phase5_grading_ms: float
     total_pipeline_ms: float
     questions: List[QuestionGradeResult] = field(default_factory=list)
@@ -101,12 +108,13 @@ class SheetGradingReport:
 
 class AutomatedGradingEngine:
     """
-    เอนจินหลักสำหรับประกอบคำศัพท์ ตรวจคำตอบเทียบกับชุดเฉลย และสร้างภาพรายงานผล (Phase 5)
+    เอนจินหลักสำหรับประกอบคำศัพท์ สแกนรหัสตัวเลข 42 ช่อง ตรวจคำตอบเทียบกับชุดเฉลย และสร้างภาพรายงานผล (Phase 5)
     """
     def __init__(
         self,
         hcr_weights_path: str,
         strikethrough_weights_path: str,
+        digit_weights_path: Optional[str] = None,
         device: str = "cpu",
         review_conf_threshold: float = 0.55,
     ):
@@ -116,6 +124,10 @@ class AutomatedGradingEngine:
         self.strike_engine = StrikethroughDetectorEngine(
             weights_path=strikethrough_weights_path, device=device
         )
+        if digit_weights_path is None:
+            default_digit_pt = Path(hcr_weights_path).parent / "hcr_resnet28_digits.pt"
+            digit_weights_path = str(default_digit_pt) if default_digit_pt.exists() else None
+        self.digit_engine = DigitRecognizerEngine(weights_path=digit_weights_path, device=device)
         self.review_conf_threshold = review_conf_threshold
 
     @staticmethod
@@ -208,6 +220,23 @@ class AutomatedGradingEngine:
         t_p2 = time.perf_counter()
         grid = self.extractor.process_rectified_sheet(res1.rectified_norm_gray, image_name=image_name)
         p2_ms = (time.perf_counter() - t_p2) * 1000.0
+
+        # Phase 4B (Header Digit Recognition 0-9): สแกนตัวเลขในกรอบสีม่วง 42 ช่อง (Student/Subject/School ID)
+        t_p4b = time.perf_counter()
+        header_field_results = self.digit_engine.predict_header_fields(grid.header_ids)
+        p4b_ms = (time.perf_counter() - t_p4b) * 1000.0
+
+        student_id_str = header_field_results["student_id"].assembled_id
+        subject_id_str = header_field_results["subject_id"].assembled_id
+        school_id_str = header_field_results["school_id"].assembled_id
+        header_filled_total = sum(r.filled_count for r in header_field_results.values())
+        header_confs = [
+            cp.confidence
+            for r in header_field_results.values()
+            for cp in r.cell_predictions
+            if not cp.is_empty
+        ]
+        header_mean_conf = float(np.mean(header_confs)) if header_confs else 1.0
 
         # Phase 4 (Pre-Scoring HCR): อ่านตัวอักษร A-Z บนช่องที่มีหมึกทั้งหมดก่อน
         t_p4 = time.perf_counter()
@@ -357,6 +386,11 @@ class AutomatedGradingEngine:
         report = SheetGradingReport(
             image_name=image_name,
             category=category,
+            student_id=student_id_str,
+            subject_id=subject_id_str,
+            school_id=school_id_str,
+            header_digits_filled=header_filled_total,
+            header_digits_mean_conf=round(header_mean_conf, 4),
             detected_question_set=grid.metrics.detected_question_set,
             detected_page_number=grid.metrics.detected_page_number,
             header_aligned_cells=header_aligned,
@@ -375,11 +409,13 @@ class AutomatedGradingEngine:
             phase2_grid_ms=round(p2_ms, 2),
             phase3_strikethrough_ms=round(p3_ms, 2),
             phase4_hcr_ms=round(p4_ms, 2),
+            phase4b_digit_ms=round(p4b_ms, 2),
             phase5_grading_ms=round(p5_ms, 2),
             total_pipeline_ms=round(total_ms, 2),
             questions=question_results,
         )
 
+        self._last_header_results = header_field_results
         return report, res1, grid, state_map, valid_char_map
 
     @staticmethod
@@ -389,11 +425,12 @@ class AutomatedGradingEngine:
         state_map: Dict[Tuple[int, int], CellStatePrediction],
         char_map: Dict[Tuple[int, int], CharPrediction],
         report: SheetGradingReport,
+        header_results: Optional[Dict[str, HeaderFieldResult]] = None,
     ) -> np.ndarray:
         """
-        สร้างภาพใบตรวจข้อสอบสมบูรณ์แบบ (Phase 5 Audit Overlay):
-        - แถบ Banner ด้านบนแสดงคะแนนรวม (Score X/Y), ชุดข้อสอบ, หน้ากระดาษ, จำนวนขีดฆ่าที่ตัดออก, และ CER
-        - กรอบสีม่วงบนช่องรหัส 42 ช่อง (พร้อมรองรับการสแกนตัวเลขในอนาคต)
+        สร้างภาพใบตรวจข้อสอบสมบูรณ์แบบ (Phase 5 Audit Overlay + Header Digit Recognition 0-9):
+        - แถบ Banner ด้านบนแสดงคะแนนรวม (Score X/Y), รหัสประจำตัว/รหัสวิชา/รหัสสถานศึกษา, ชุดข้อสอบ, หน้ากระดาษ
+        - กรอบสีม่วงบนช่องรหัส 42 ช่อง พร้อมแสดงตัวเลข 0-9 ที่สแกนได้เหนือแต่ละช่องและป้ายสรุปรหัสด้านขวา
         - วงกลม OMR สีเขียว/ฟ้า
         - ช่องตัวอักษรปกติสีเขียว + ตัวอักษรที่อ่านได้สีน้ำเงิน
         - ช่องขีดฆ่า 2 เส้น (`=`) สีแดงสดพร้อมกากบาททับ
@@ -401,12 +438,57 @@ class AutomatedGradingEngine:
         """
         vis = rectified_bgr.copy()
 
-        # 1. วาด Header IDs (42 ช่องสีม่วง) และ OMR Bubbles (7 วง)
-        for _, cell_list in grid.header_cells_info.items():
-            for hcell in cell_list:
+        # 1. วาด Header IDs (42 ช่องสีม่วง) พร้อมแสดงตัวเลข 0-9 ที่สแกนได้
+        for field_name, cell_list in grid.header_cells_info.items():
+            f_res = header_results.get(field_name) if header_results else None
+            for idx, hcell in enumerate(cell_list):
                 x1, y1, x2, y2 = hcell.bbox
                 color = (180, 0, 180) if hcell.is_aligned else (0, 165, 255)
                 cv2.rectangle(vis, (x1, y1), (x2, y2), color, 2)
+
+                if f_res and idx < len(f_res.cell_predictions):
+                    dp = f_res.cell_predictions[idx]
+                    if not dp.is_empty and dp.predicted_digit != "":
+                        cv2.rectangle(vis, (x1, y1), (x2, y2), (140, 0, 210), 3)
+                        cv2.putText(
+                            vis,
+                            dp.predicted_digit,
+                            (x1 + 5, y1 + 25),
+                            cv2.FONT_HERSHEY_SIMPLEX,
+                            0.72,
+                            (140, 0, 180),
+                            2,
+                            cv2.LINE_AA,
+                        )
+
+            # วาดป้ายสรุปรหัสที่อ่านได้ทางด้านขวาของแถวกรอบสีม่วง (ถ้ามีตัวเลขเขียน)
+            if f_res and f_res.filled_count > 0 and len(cell_list) > 0:
+                last_bx2 = cell_list[-1].bbox[2]
+                by1, by2 = cell_list[0].bbox[1], cell_list[0].bbox[3]
+                cv2.rectangle(
+                    vis,
+                    (last_bx2 + 8, by1 + 6),
+                    (min(vis.shape[1] - 4, last_bx2 + 255), by2 - 6),
+                    (248, 232, 255),
+                    -1,
+                )
+                cv2.rectangle(
+                    vis,
+                    (last_bx2 + 8, by1 + 6),
+                    (min(vis.shape[1] - 4, last_bx2 + 255), by2 - 6),
+                    (160, 0, 160),
+                    2,
+                )
+                cv2.putText(
+                    vis,
+                    f"{f_res.assembled_id} ({f_res.mean_confidence*100:.0f}%)",
+                    (last_bx2 + 14, by1 + 50),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.56,
+                    (120, 0, 140),
+                    2,
+                    cv2.LINE_AA,
+                )
 
         for _, b_list in grid.omr_bubbles_info.items():
             for b in b_list:
@@ -414,8 +496,8 @@ class AutomatedGradingEngine:
                 color = (0, 180, 0) if b.is_filled else (220, 180, 0)
                 cv2.circle(vis, (cx, cy), 22, color, 2)
 
-        # 2. วาด Banner สรุปผลคะแนนด้านบนกระดาษ
-        banner_x1, banner_y1, banner_x2, banner_y2 = 100, 35, 2080, 130
+        # 2. วาด Banner สรุปผลคะแนนและรหัสประจำตัวด้านบนกระดาษ
+        banner_x1, banner_y1, banner_x2, banner_y2 = 100, 30, 2120, 135
         cv2.rectangle(vis, (banner_x1, banner_y1), (banner_x2, banner_y2), (242, 248, 255), -1)
         cv2.rectangle(vis, (banner_x1, banner_y1), (banner_x2, banner_y2), (160, 90, 20), 3)
 
@@ -425,17 +507,32 @@ class AutomatedGradingEngine:
             f"SCORE: {report.total_score}/{report.max_possible_score} "
             f"({report.exact_match_accuracy_pct:.1f}%) | "
             f"CER: {report.overall_cer_pct:.2f}% | "
-            f"Strikethrough Removed: {report.total_strikethrough_removed} | "
+            f"Strike Removed: {report.total_strikethrough_removed} | "
             f"Set: {qset_str} Page: {page_str}"
         )
         cv2.putText(
             vis,
             score_txt,
-            (banner_x1 + 24, banner_y1 + 62),
+            (banner_x1 + 22, banner_y1 + 48),
             cv2.FONT_HERSHEY_SIMPLEX,
-            0.95,
+            0.86,
             (130, 50, 0),
             3,
+            cv2.LINE_AA,
+        )
+
+        stu_disp = report.student_id if report.student_id else "-"
+        sub_disp = report.subject_id if report.subject_id else "-"
+        sch_disp = report.school_id if report.school_id else "-"
+        header_txt = f"Student ID: {stu_disp} | Subject ID: {sub_disp} | School ID: {sch_disp}"
+        cv2.putText(
+            vis,
+            header_txt,
+            (banner_x1 + 22, banner_y1 + 90),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.76,
+            (130, 0, 140),
+            2,
             cv2.LINE_AA,
         )
 

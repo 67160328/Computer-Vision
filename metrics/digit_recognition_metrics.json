@@ -1,0 +1,289 @@
+{
+  "dataset": "data/Number Handwriter (0-9)",
+  "total_images": 21555,
+  "train_samples": 17245,
+  "val_samples": 2156,
+  "test_samples": 2154,
+  "best_val_top1_accuracy_pct": 99.77,
+  "test_top1_accuracy_pct": 99.58,
+  "test_top3_accuracy_pct": 99.95,
+  "test_macro_f1": 0.9958,
+  "training_time_sec": 563.54,
+  "per_class_test_metrics": {
+    "0": {
+      "precision_pct": 99.55,
+      "recall_pct": 100.0,
+      "f1_score": 0.9978,
+      "support": 223
+    },
+    "1": {
+      "precision_pct": 99.11,
+      "recall_pct": 99.11,
+      "f1_score": 0.9911,
+      "support": 224
+    },
+    "2": {
+      "precision_pct": 99.56,
+      "recall_pct": 100.0,
+      "f1_score": 0.9978,
+      "support": 224
+    },
+    "3": {
+      "precision_pct": 99.54,
+      "recall_pct": 99.09,
+      "f1_score": 0.9932,
+      "support": 220
+    },
+    "4": {
+      "precision_pct": 99.54,
+      "recall_pct": 99.54,
+      "f1_score": 0.9954,
+      "support": 218
+    },
+    "5": {
+      "precision_pct": 100.0,
+      "recall_pct": 99.53,
+      "f1_score": 0.9976,
+      "support": 212
+    },
+    "6": {
+      "precision_pct": 99.53,
+      "recall_pct": 100.0,
+      "f1_score": 0.9976,
+      "support": 212
+    },
+    "7": {
+      "precision_pct": 99.06,
+      "recall_pct": 99.53,
+      "f1_score": 0.9929,
+      "support": 211
+    },
+    "8": {
+      "precision_pct": 100.0,
+      "recall_pct": 100.0,
+      "f1_score": 1.0,
+      "support": 209
+    },
+    "9": {
+      "precision_pct": 100.0,
+      "recall_pct": 99.0,
+      "f1_score": 0.995,
+      "support": 201
+    }
+  },
+  "epoch_history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.4373,
+      "train_acc": 96.49,
+      "val_loss": 0.0797,
+      "val_top1_acc": 98.93,
+      "val_top3_acc": 99.95,
+      "val_macro_f1": 0.9892
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3369,
+      "train_acc": 98.72,
+      "val_loss": 0.0834,
+      "val_top1_acc": 98.93,
+      "val_top3_acc": 99.91,
+      "val_macro_f1": 0.9891
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.3259,
+      "train_acc": 98.97,
+      "val_loss": 0.0744,
+      "val_top1_acc": 99.35,
+      "val_top3_acc": 99.91,
+      "val_macro_f1": 0.9934
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.3192,
+      "train_acc": 99.21,
+      "val_loss": 0.056,
+      "val_top1_acc": 99.63,
+      "val_top3_acc": 99.91,
+      "val_macro_f1": 0.9963
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.3163,
+      "train_acc": 99.26,
+      "val_loss": 0.0577,
+      "val_top1_acc": 99.58,
+      "val_top3_acc": 99.95,
+      "val_macro_f1": 0.9958
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.3122,
+      "train_acc": 99.39,
+      "val_loss": 0.0467,
+      "val_top1_acc": 99.72,
+      "val_top3_acc": 99.91,
+      "val_macro_f1": 0.9972
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.3083,
+      "train_acc": 99.51,
+      "val_loss": 0.0538,
+      "val_top1_acc": 99.49,
+      "val_top3_acc": 99.95,
+      "val_macro_f1": 0.9948
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.3063,
+      "train_acc": 99.52,
+      "val_loss": 0.0473,
+      "val_top1_acc": 99.77,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9977
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.3008,
+      "train_acc": 99.72,
+      "val_loss": 0.0524,
+      "val_top1_acc": 99.68,
+      "val_top3_acc": 99.95,
+      "val_macro_f1": 0.9967
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.3019,
+      "train_acc": 99.59,
+      "val_loss": 0.05,
+      "val_top1_acc": 99.72,
+      "val_top3_acc": 99.95,
+      "val_macro_f1": 0.9972
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.2982,
+      "train_acc": 99.72,
+      "val_loss": 0.0503,
+      "val_top1_acc": 99.58,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9958
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.2967,
+      "train_acc": 99.77,
+      "val_loss": 0.0493,
+      "val_top1_acc": 99.63,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9963
+    },
+    {
+      "epoch": 13,
+      "train_loss": 0.2948,
+      "train_acc": 99.87,
+      "val_loss": 0.0473,
+      "val_top1_acc": 99.72,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9972
+    },
+    {
+      "epoch": 14,
+      "train_loss": 0.2951,
+      "train_acc": 99.81,
+      "val_loss": 0.0497,
+      "val_top1_acc": 99.77,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9977
+    },
+    {
+      "epoch": 15,
+      "train_loss": 0.2932,
+      "train_acc": 99.88,
+      "val_loss": 0.0515,
+      "val_top1_acc": 99.77,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9977
+    },
+    {
+      "epoch": 16,
+      "train_loss": 0.2925,
+      "train_acc": 99.91,
+      "val_loss": 0.0498,
+      "val_top1_acc": 99.72,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9972
+    },
+    {
+      "epoch": 17,
+      "train_loss": 0.2919,
+      "train_acc": 99.91,
+      "val_loss": 0.0505,
+      "val_top1_acc": 99.72,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9972
+    },
+    {
+      "epoch": 18,
+      "train_loss": 0.2931,
+      "train_acc": 99.86,
+      "val_loss": 0.0502,
+      "val_top1_acc": 99.77,
+      "val_top3_acc": 100.0,
+      "val_macro_f1": 0.9977
+    }
+  ],
+  "blank_header_specificity_pct": 100.0,
+  "blank_header_cells_tested": 798,
+  "purple_box_injected_digit_accuracy_pct": 100.0,
+  "purple_box_exact_field_match_pct": 100.0,
+  "demo_sheet_results": [
+    {
+      "sheet_name": "04_words_vocab_001.jpg",
+      "output_visual": "phase5_header_demo_vocab_001.jpg",
+      "ground_truth_ids": {
+        "student_id": "67160328",
+        "subject_id": "886240959",
+        "school_id": "2001381042"
+      },
+      "predicted_ids": {
+        "student_id": "67160328",
+        "subject_id": "886240959",
+        "school_id": "2001381042"
+      },
+      "exam_score": "20/20"
+    },
+    {
+      "sheet_name": "02_edge_strikethrough_005.jpg",
+      "output_visual": "phase5_header_demo_edge_005.jpg",
+      "ground_truth_ids": {
+        "student_id": "67160105",
+        "subject_id": "886240959",
+        "school_id": "2001381042"
+      },
+      "predicted_ids": {
+        "student_id": "67160105",
+        "subject_id": "886240959",
+        "school_id": "2001381042"
+      },
+      "exam_score": "20/20"
+    },
+    {
+      "sheet_name": "ตัวอย่างที่ 3.jpg",
+      "output_visual": "phase5_header_demo_test_3.jpg",
+      "ground_truth_ids": {
+        "student_id": "67160328001234",
+        "subject_id": "01234567890123",
+        "school_id": "98765432109876"
+      },
+      "predicted_ids": {
+        "student_id": "67160328001234",
+        "subject_id": "01234567890123",
+        "school_id": "98765432109876"
+      },
+      "exam_score": "20/20"
+    }
+  ]
+}
