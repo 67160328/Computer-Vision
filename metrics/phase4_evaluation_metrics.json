@@ -1,0 +1,527 @@
+{
+  "dataset_info": {
+    "source_csv": "data/A_Z Handwritten Data/A_Z Handwritten Data.csv",
+    "total_csv_samples": 372451,
+    "num_classes": 26,
+    "validation_samples_evaluated": 7542
+  },
+  "az_validation_metrics": {
+    "top1_accuracy_pct": 98.77,
+    "top3_accuracy_pct": 99.8,
+    "macro_precision": 0.988,
+    "macro_recall": 0.9879,
+    "macro_f1": 0.9879
+  },
+  "real_exam_sheets_metrics": {
+    "total_sheets_evaluated": 5,
+    "total_characters_evaluated": 786,
+    "total_correct_characters": 786,
+    "char_top1_accuracy_pct": 100.0,
+    "char_top3_accuracy_pct": 100.0,
+    "macro_precision": 1.0,
+    "macro_recall": 1.0,
+    "macro_f1": 1.0,
+    "word_exact_match_count": "72/72",
+    "word_exact_match_pct": 100.0,
+    "mean_confidence": 0.9096,
+    "mean_shannon_entropy_bits": 0.8499,
+    "row_batch_latency_ms": {
+      "mean": 23.01,
+      "median": 19.14
+    }
+  },
+  "per_sheet_breakdown": [
+    {
+      "sheet_name": "ตัวอย่างที่ 1.jpg",
+      "visual_file": "phase4_test_1.jpg",
+      "total_chars": 120,
+      "correct_chars": 120,
+      "char_top1_acc_pct": 100.0,
+      "char_top3_acc_pct": 100.0,
+      "words_exact_match": "6/6",
+      "word_accuracy_pct": 100.0,
+      "rows": [
+        {
+          "row": 1,
+          "ground_truth": "UUUUUUUUUUUUUUUUUUUU",
+          "predicted": "UUUUUUUUUUUUUUUUUUUU",
+          "exact_match": true
+        },
+        {
+          "row": 2,
+          "ground_truth": "VVVVVVVVVVVVVVVVVVVV",
+          "predicted": "VVVVVVVVVVVVVVVVVVVV",
+          "exact_match": true
+        },
+        {
+          "row": 3,
+          "ground_truth": "WWWWWWWWWWWWWWWWWWWW",
+          "predicted": "WWWWWWWWWWWWWWWWWWWW",
+          "exact_match": true
+        },
+        {
+          "row": 4,
+          "ground_truth": "XXXXXXXXXXXXXXXXXXXX",
+          "predicted": "XXXXXXXXXXXXXXXXXXXX",
+          "exact_match": true
+        },
+        {
+          "row": 5,
+          "ground_truth": "YYYYYYYYYYYYYYYYYYYY",
+          "predicted": "YYYYYYYYYYYYYYYYYYYY",
+          "exact_match": true
+        },
+        {
+          "row": 6,
+          "ground_truth": "ZZZZZZZZZZZZZZZZZZZZ",
+          "predicted": "ZZZZZZZZZZZZZZZZZZZZ",
+          "exact_match": true
+        }
+      ]
+    },
+    {
+      "sheet_name": "ตัวอย่างที่ 2.jpg",
+      "visual_file": "phase4_test_2.jpg",
+      "total_chars": 400,
+      "correct_chars": 400,
+      "char_top1_acc_pct": 100.0,
+      "char_top3_acc_pct": 100.0,
+      "words_exact_match": "20/20",
+      "word_accuracy_pct": 100.0,
+      "rows": [
+        {
+          "row": 1,
+          "ground_truth": "AAAAAAAAAAAAAAAAAAAA",
+          "predicted": "AAAAAAAAAAAAAAAAAAAA",
+          "exact_match": true
+        },
+        {
+          "row": 2,
+          "ground_truth": "BBBBBBBBBBBBBBBBBBBB",
+          "predicted": "BBBBBBBBBBBBBBBBBBBB",
+          "exact_match": true
+        },
+        {
+          "row": 3,
+          "ground_truth": "CCCCCCCCCCCCCCCCCCCC",
+          "predicted": "CCCCCCCCCCCCCCCCCCCC",
+          "exact_match": true
+        },
+        {
+          "row": 4,
+          "ground_truth": "DDDDDDDDDDDDDDDDDDDD",
+          "predicted": "DDDDDDDDDDDDDDDDDDDD",
+          "exact_match": true
+        },
+        {
+          "row": 5,
+          "ground_truth": "EEEEEEEEEEEEEEEEEEEE",
+          "predicted": "EEEEEEEEEEEEEEEEEEEE",
+          "exact_match": true
+        },
+        {
+          "row": 6,
+          "ground_truth": "FFFFFFFFFFFFFFFFFFFF",
+          "predicted": "FFFFFFFFFFFFFFFFFFFF",
+          "exact_match": true
+        },
+        {
+          "row": 7,
+          "ground_truth": "GGGGGGGGGGGGGGGGGGGG",
+          "predicted": "GGGGGGGGGGGGGGGGGGGG",
+          "exact_match": true
+        },
+        {
+          "row": 8,
+          "ground_truth": "HHHHHHHHHHHHHHHHHHHH",
+          "predicted": "HHHHHHHHHHHHHHHHHHHH",
+          "exact_match": true
+        },
+        {
+          "row": 9,
+          "ground_truth": "IIIIIIIIIIIIIIIIIIII",
+          "predicted": "IIIIIIIIIIIIIIIIIIII",
+          "exact_match": true
+        },
+        {
+          "row": 10,
+          "ground_truth": "JJJJJJJJJJJJJJJJJJJJ",
+          "predicted": "JJJJJJJJJJJJJJJJJJJJ",
+          "exact_match": true
+        },
+        {
+          "row": 11,
+          "ground_truth": "KKKKKKKKKKKKKKKKKKKK",
+          "predicted": "KKKKKKKKKKKKKKKKKKKK",
+          "exact_match": true
+        },
+        {
+          "row": 12,
+          "ground_truth": "LLLLLLLLLLLLLLLLLLLL",
+          "predicted": "LLLLLLLLLLLLLLLLLLLL",
+          "exact_match": true
+        },
+        {
+          "row": 13,
+          "ground_truth": "MMMMMMMMMMMMMMMMMMMM",
+          "predicted": "MMMMMMMMMMMMMMMMMMMM",
+          "exact_match": true
+        },
+        {
+          "row": 14,
+          "ground_truth": "NNNNNNNNNNNNNNNNNNNN",
+          "predicted": "NNNNNNNNNNNNNNNNNNNN",
+          "exact_match": true
+        },
+        {
+          "row": 15,
+          "ground_truth": "OOOOOOOOOOOOOOOOOOOO",
+          "predicted": "OOOOOOOOOOOOOOOOOOOO",
+          "exact_match": true
+        },
+        {
+          "row": 16,
+          "ground_truth": "PPPPPPPPPPPPPPPPPPPP",
+          "predicted": "PPPPPPPPPPPPPPPPPPPP",
+          "exact_match": true
+        },
+        {
+          "row": 17,
+          "ground_truth": "QQQQQQQQQQQQQQQQQQQQ",
+          "predicted": "QQQQQQQQQQQQQQQQQQQQ",
+          "exact_match": true
+        },
+        {
+          "row": 18,
+          "ground_truth": "RRRRRRRRRRRRRRRRRRRR",
+          "predicted": "RRRRRRRRRRRRRRRRRRRR",
+          "exact_match": true
+        },
+        {
+          "row": 19,
+          "ground_truth": "SSSSSSSSSSSSSSSSSSSS",
+          "predicted": "SSSSSSSSSSSSSSSSSSSS",
+          "exact_match": true
+        },
+        {
+          "row": 20,
+          "ground_truth": "TTTTTTTTTTTTTTTTTTTT",
+          "predicted": "TTTTTTTTTTTTTTTTTTTT",
+          "exact_match": true
+        }
+      ]
+    },
+    {
+      "sheet_name": "ตัวอย่างที่ 3.jpg",
+      "visual_file": "phase4_test_3.jpg",
+      "total_chars": 130,
+      "correct_chars": 130,
+      "char_top1_acc_pct": 100.0,
+      "char_top3_acc_pct": 100.0,
+      "words_exact_match": "20/20",
+      "word_accuracy_pct": 100.0,
+      "rows": [
+        {
+          "row": 1,
+          "ground_truth": "SCHEME",
+          "predicted": "SCHEME",
+          "exact_match": true
+        },
+        {
+          "row": 2,
+          "ground_truth": "PASSION",
+          "predicted": "PASSION",
+          "exact_match": true
+        },
+        {
+          "row": 3,
+          "ground_truth": "BLEND",
+          "predicted": "BLEND",
+          "exact_match": true
+        },
+        {
+          "row": 4,
+          "ground_truth": "MAINTAIN",
+          "predicted": "MAINTAIN",
+          "exact_match": true
+        },
+        {
+          "row": 5,
+          "ground_truth": "LAYOUT",
+          "predicted": "LAYOUT",
+          "exact_match": true
+        },
+        {
+          "row": 6,
+          "ground_truth": "CLARIFY",
+          "predicted": "CLARIFY",
+          "exact_match": true
+        },
+        {
+          "row": 7,
+          "ground_truth": "SHARP",
+          "predicted": "SHARP",
+          "exact_match": true
+        },
+        {
+          "row": 8,
+          "ground_truth": "MODERATE",
+          "predicted": "MODERATE",
+          "exact_match": true
+        },
+        {
+          "row": 9,
+          "ground_truth": "THRIVE",
+          "predicted": "THRIVE",
+          "exact_match": true
+        },
+        {
+          "row": 10,
+          "ground_truth": "SINCERE",
+          "predicted": "SINCERE",
+          "exact_match": true
+        },
+        {
+          "row": 11,
+          "ground_truth": "SPLIT",
+          "predicted": "SPLIT",
+          "exact_match": true
+        },
+        {
+          "row": 12,
+          "ground_truth": "ADEQUATE",
+          "predicted": "ADEQUATE",
+          "exact_match": true
+        },
+        {
+          "row": 13,
+          "ground_truth": "REWARD",
+          "predicted": "REWARD",
+          "exact_match": true
+        },
+        {
+          "row": 14,
+          "ground_truth": "EMBRACE",
+          "predicted": "EMBRACE",
+          "exact_match": true
+        },
+        {
+          "row": 15,
+          "ground_truth": "BROAD",
+          "predicted": "BROAD",
+          "exact_match": true
+        },
+        {
+          "row": 16,
+          "ground_truth": "TREASURE",
+          "predicted": "TREASURE",
+          "exact_match": true
+        },
+        {
+          "row": 17,
+          "ground_truth": "FREEZE",
+          "predicted": "FREEZE",
+          "exact_match": true
+        },
+        {
+          "row": 18,
+          "ground_truth": "JUSTICE",
+          "predicted": "JUSTICE",
+          "exact_match": true
+        },
+        {
+          "row": 19,
+          "ground_truth": "GRACE",
+          "predicted": "GRACE",
+          "exact_match": true
+        },
+        {
+          "row": 20,
+          "ground_truth": "VALIDATE",
+          "predicted": "VALIDATE",
+          "exact_match": true
+        }
+      ]
+    },
+    {
+      "sheet_name": "ตัวอย่างที่ 4.jpg",
+      "visual_file": "phase4_test_4.jpg",
+      "total_chars": 130,
+      "correct_chars": 130,
+      "char_top1_acc_pct": 100.0,
+      "char_top3_acc_pct": 100.0,
+      "words_exact_match": "20/20",
+      "word_accuracy_pct": 100.0,
+      "rows": [
+        {
+          "row": 1,
+          "ground_truth": "MODEST",
+          "predicted": "MODEST",
+          "exact_match": true
+        },
+        {
+          "row": 2,
+          "ground_truth": "NURTURE",
+          "predicted": "NURTURE",
+          "exact_match": true
+        },
+        {
+          "row": 3,
+          "ground_truth": "ADAPT",
+          "predicted": "ADAPT",
+          "exact_match": true
+        },
+        {
+          "row": 4,
+          "ground_truth": "STRUGGLE",
+          "predicted": "STRUGGLE",
+          "exact_match": true
+        },
+        {
+          "row": 5,
+          "ground_truth": "UPDATE",
+          "predicted": "UPDATE",
+          "exact_match": true
+        },
+        {
+          "row": 6,
+          "ground_truth": "OBSERVE",
+          "predicted": "OBSERVE",
+          "exact_match": true
+        },
+        {
+          "row": 7,
+          "ground_truth": "DRIFT",
+          "predicted": "DRIFT",
+          "exact_match": true
+        },
+        {
+          "row": 8,
+          "ground_truth": "PATIENCE",
+          "predicted": "PATIENCE",
+          "exact_match": true
+        },
+        {
+          "row": 9,
+          "ground_truth": "GENTLE",
+          "predicted": "GENTLE",
+          "exact_match": true
+        },
+        {
+          "row": 10,
+          "ground_truth": "OPTIMAL",
+          "predicted": "OPTIMAL",
+          "exact_match": true
+        },
+        {
+          "row": 11,
+          "ground_truth": "CHASE",
+          "predicted": "CHASE",
+          "exact_match": true
+        },
+        {
+          "row": 12,
+          "ground_truth": "QUANTITY",
+          "predicted": "QUANTITY",
+          "exact_match": true
+        },
+        {
+          "row": 13,
+          "ground_truth": "NOTION",
+          "predicted": "NOTION",
+          "exact_match": true
+        },
+        {
+          "row": 14,
+          "ground_truth": "WARRIOR",
+          "predicted": "WARRIOR",
+          "exact_match": true
+        },
+        {
+          "row": 15,
+          "ground_truth": "MERIT",
+          "predicted": "MERIT",
+          "exact_match": true
+        },
+        {
+          "row": 16,
+          "ground_truth": "VIGOROUS",
+          "predicted": "VIGOROUS",
+          "exact_match": true
+        },
+        {
+          "row": 17,
+          "ground_truth": "WANDER",
+          "predicted": "WANDER",
+          "exact_match": true
+        },
+        {
+          "row": 18,
+          "ground_truth": "FORTUNE",
+          "predicted": "FORTUNE",
+          "exact_match": true
+        },
+        {
+          "row": 19,
+          "ground_truth": "JUDGE",
+          "predicted": "JUDGE",
+          "exact_match": true
+        },
+        {
+          "row": 20,
+          "ground_truth": "HERITAGE",
+          "predicted": "HERITAGE",
+          "exact_match": true
+        }
+      ]
+    },
+    {
+      "sheet_name": "ตัวอย่างการขีดฆ่า.jpg",
+      "visual_file": "phase4_test_strike.jpg",
+      "total_chars": 6,
+      "correct_chars": 6,
+      "char_top1_acc_pct": 100.0,
+      "char_top3_acc_pct": 100.0,
+      "words_exact_match": "6/6",
+      "word_accuracy_pct": 100.0,
+      "rows": [
+        {
+          "row": 1,
+          "ground_truth": "U",
+          "predicted": "U",
+          "exact_match": true
+        },
+        {
+          "row": 2,
+          "ground_truth": "V",
+          "predicted": "V",
+          "exact_match": true
+        },
+        {
+          "row": 3,
+          "ground_truth": "W",
+          "predicted": "W",
+          "exact_match": true
+        },
+        {
+          "row": 4,
+          "ground_truth": "X",
+          "predicted": "X",
+          "exact_match": true
+        },
+        {
+          "row": 5,
+          "ground_truth": "Y",
+          "predicted": "Y",
+          "exact_match": true
+        },
+        {
+          "row": 6,
+          "ground_truth": "Z",
+          "predicted": "Z",
+          "exact_match": true
+        }
+      ]
+    }
+  ]
+}

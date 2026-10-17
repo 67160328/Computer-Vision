@@ -68,6 +68,12 @@
 - **OMR Bubble Exact Alignment:** **`100.0%`** (357/357 วง | Mean NCC = `0.4653`)
 - **OMR Bubble CLA Accuracy:** **`100.0%`** (`100.0%`)
 
+### Phase 4: Handwritten Character Recognition (HCR CNN Engine)
+- **A–Z Validation Accuracy (7,800 ตัวอย่าง):** **`Top-1 = 98.77%`**, **`Top-3 = 99.80%`**, **`Macro-F1 = 0.9879`**
+- **Real Exam Sheets Character Accuracy (786 ตัวอักษร):** **`Top-1 = 100.0% (786/786)`**, **`Top-3 = 100.0%`**, **`Macro-F1 = 1.0000`**
+- **Real Exam Word / Row Match (72 แถวคำตอบจริง):** **`100.0% (72/72 แถว)`**
+- **Row-Batch Latency (CPU):** **`19.14 ms / แถว`** ($\approx 0.96\text{ ms/ช่อง}$)
+
 ---
 
 ## 📁 โครงสร้างโปรเจกต์ (Project Directory Structure)
@@ -86,18 +92,28 @@ Lab9/
 │   │   └── dewarp.py
 │   ├── detection/                       # Phase 2: Timing Bars, Grid & OMR Extraction
 │   │   └── grid_extractor.py
+│   ├── recognition/                     # Phase 4: HCR Normalizer, ResNet28 & Trainer
+│   │   ├── char_classifier.py
+│   │   └── train_hcr.py
 │   └── evaluation/                      # สคริปต์รันประเมินผลเชิงปริมาณ
 │       ├── evaluate_phase1.py
-│       └── evaluate_phase2.py
+│       ├── evaluate_phase2.py
+│       ├── evaluate_phase4.py
+│       └── test_handwritten_sheets.py
+├── models/                              # โมเดล Deep Learning ที่เทรนเสร็จสมบูรณ์
+│   └── hcr_resnet28_az.pt               # Lightweight ResNet-28 สำหรับจำแนกอักษร A-Z
 ├── metrics/                             # รายงานตัวชี้วัดเชิงปริมาณและภาพตัวอย่าง
 │   ├── README.md
 │   ├── Phase1_Metrics_Report.md
 │   ├── Phase2_Metrics_Report.md
+│   ├── Phase4_Metrics_Report.md
 │   ├── phase1_evaluation_metrics.json
 │   ├── phase2_evaluation_metrics.json
-│   └── visuals/                         # ภาพผลลัพธ์การจัดตำแหน่งและดัดระนาบ
+│   ├── phase4_evaluation_metrics.json
+│   └── visuals/                         # ภาพผลลัพธ์การจัดตำแหน่งและผลวิเคราะห์ตัวอักษร
 ├── data/                                # ข้อมูลรูปภาพกระดาษคำตอบ
 │   ├── raw/                             # ภาพถ่ายต้นฉบับจากสมาร์ทโฟน
+│   ├── Test/                            # ภาพกระดาษคำตอบที่มีลายมือเขียนและรอยขีดฆ่าจริง
 │   └── processed/                       # ภาพผลลัพธ์การดัดระนาบและผลวิเคราะห์
 ├── requirements.txt                     # รายการไลบรารีที่จำเป็น
 └── README.md                            # คำอธิบายโปรเจกต์
@@ -120,6 +136,11 @@ python src/evaluation/evaluate_phase1.py
 ### 3. รันการประเมินผล Phase 2 (Grid & Cell Extraction)
 ```bash
 python src/evaluation/evaluate_phase2.py
+```
+
+### 4. รันการประเมินผล Phase 4 (Handwritten Character Recognition)
+```bash
+python src/evaluation/evaluate_phase4.py
 ```
 
 ---
