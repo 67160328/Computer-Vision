@@ -1,0 +1,521 @@
+FILE: Automated Optical Marker Exam Recognition using Cross-Linear Area Detection from Smartphone Camera .pdf
+PAGES: 5
+
+
+--- PAGE 1 ---
+Automated Optical Marker Exam Recognition using 
+Cross-Linear Area Detection from Smartphone 
+Camera 
+Watcharaphong Yookwan 
+Faculty of Informatics 
+Burapha University 
+Chonburi, Thailand 
+wyookwan@informatics.buu.ac.th 
+Jirayus Arbking 
+Faculty of Informatics 
+Burapha University 
+Chonburi, Thailand 
+jirayu.ar@go.buu.ac.th 
+Athita Onuean 
+Faculty of Informatics 
+Burapha University 
+Chonburi, Thailand 
+athitha@go.buu.ac.th 
+Sirima Chinnasarn 
+Faculty of Science 
+Burapha University 
+Chonburi, Thailand 
+sirima@buu.ac.th 
+Sirapat Tansavetwong 
+Faculty of Informatics 
+Burapha University 
+Chonburi, Thailand 
+sirapat.ta@go.buu.ac.th 
+Krisana Chinnasarn 
+Faculty of Informatics 
+Burapha University 
+Chonburi, Thailand 
+krisana@informatics.buu.ac.th 
+Abstract— This paper presents an automated system for 
+evaluating optical marker-based multiple-choice answer sheets 
+using images captured from smartphone cameras. The proposed 
+approach addresses the challenges of document distortion, 
+varying lighting conditions, and diverse sheet templates through 
+a multi-stage pipeline. The system begins with image dewarping 
+using homographic transformation to correct perspective 
+distortions. Key structural components—such as Exam 
+Number, Student ID, and Page Number—are localized using 
+YOLOv8 object detection. The answer region is then identified 
+and cropped for analysis. Template matching is employed to 
+detect landmark points, enabling precise alignment of the 
+answer grid. Optical Mark Recognition (OMR) is performed 
+using a Cross-Linear Area (CLA) algorithm, which calculates 
+the ratio of dark pixels within each marker region to determine 
+marked 
+responses. 
+Detected 
+answers 
+are 
+mapped 
+to 
+corresponding questions and exported in JSON format for 
+downstream use. Experimental results demonstrate that the 
+system is accurate, efficient, and robust to real-world imaging 
+conditions, offering a practical solution for low-cost, mobile-
+based exam evaluation. 
+Keywords—component, formatting, style, styling, insert (key 
+words) 
+I. INTRODUCTION
+The automation of examination grading processes has 
+become increasingly vital in modern educational and 
+certification systems, aiming to reduce human error, minimize 
+processing time, and enhance overall efficiency. Traditional 
+Optical Mark Recognition (OMR) technologies, while 
+effective, typically depend on specialized scanning equipment 
+and standardized answer sheets, leading to significant 
+infrastructural costs and limited adaptability in diverse 
+operational environments [1]. In recent years, the proliferation 
+of high-resolution smartphone cameras has opened new 
+avenues for developing low-cost, portable OMR solutions 
+accessible to a broader range of users [2]. 
+This paper presents an automated optical marker exam 
+evaluation system utilizing a novel Cross-Linear Area (CLA) 
+algorithm, designed specifically for smartphone-based image 
+acquisition. In contrast to conventional OMR techniques, 
+which primarily rely on pixel intensity analysis, thresholding, 
+or simple contour detection, the proposed CLA algorithm 
+evaluates the distribution of filled areas across predefined 
+cross-linear scan paths. This method enhances detection 
+robustness against common challenges such as variable 
+illumination, non-uniform shading, form distortions, and 
+imprecise user markings, which frequently impair the 
+reliability of traditional approaches. 
+The proposed system enables users to capture examination 
+sheets using standard smartphone cameras without requiring 
+extensive alignment procedures or highly controlled lighting 
+conditions. Subsequent processing steps involve form 
+normalization, marker localization, and response recognition 
+based on the CLA algorithm, culminating in automatic 
+scoring. Experimental validation across various smartphone 
+models, lighting scenarios, and form designs demonstrates the 
+system's effectiveness and resilience, achieving high accuracy 
+comparable to that of conventional OMR systems while 
+offering greater flexibility and significantly reduced 
+operational constraints. 
+II. PROBLEM STATEMENTS
+ Despite the widespread adoption of Optical Mark 
+Recognition (OMR) systems for automated exam grading, 
+traditional OMR solutions are inherently constrained by 
+several critical limitations [3]. Firstly, they require specialized 
+hardware such as high-precision scanners and uniformly 
+printed answer sheets, resulting in high deployment and 
+operational costs. Secondly, conventional OMR techniques 
+exhibit sensitivity to variations in environmental conditions, 
+including uneven lighting, paper distortions, and incomplete 
+or ambiguous markings, which can significantly degrade 
+recognition accuracy [4]. These constraints make traditional 
+systems less accessible, particularly in resource-limited 
+settings such as remote educational institutions or informal 
+testing environments [5]. 
+The advent of smartphone technology, with its ubiquitous 
+availability and continual advancements in camera quality, 
+presents an opportunity to democratize automated exam 
+evaluation by eliminating the dependency on specialized 
+equipment [6]. However, leveraging smartphone-captured 
+images introduces new technical challenges, including 
+variable lighting, perspective distortions, occlusions, and 
+inconsistent answer sheet formats. Traditional threshold-
+979-8-3315-1258-3/25/$31.00 ©2025 IEEE 
+SNPD 2025, June 25-27, 2025, Busan, Korea
+461
+2025 IEEE/ACIS 29th International Conference on Software Engineering, Artificial Intelligence, Networking and Parallel/Distributed Computing (SNPD) | 979-8-3315-1258-3/25/$31.00 ©2025 IEEE | DOI: 10.1109/SNPD65828.2025.11253724
+Authorized licensed use limited to: Burapha University provided by UniNet. Downloaded on October 07,2026 at 03:48:19 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- PAGE 2 ---
+based or contour-based detection methods often fail to 
+maintain acceptable accuracy under such uncontrolled 
+conditions. 
+Accordingly, there is a pressing need for a robust, low-
+cost, and accessible OMR solution capable of operating 
+effectively with images captured under diverse real-world 
+conditions using standard smartphone cameras. To address 
+these challenges, this paper proposes a novel system based on 
+the Cross-Linear Area (CLA) algorithm, which is specifically 
+designed to enhance the reliability of mark detection by 
+analyzing structural area distributions rather than relying 
+solely on pixel intensity or contour shapes. This approach 
+aims to deliver a practical, accurate, and scalable solution for 
+automated exam evaluation without the necessity for 
+specialized hardware or strict environmental control. 
+III. BACKGROUND 
+Before Optical Mark Recognition (OMR) is a widely used 
+technique for the automated reading of marked data from 
+paper forms, particularly in standardized testing and survey 
+collection. Traditional OMR systems typically rely on high-
+resolution scanners and fixed-form layouts, which require 
+precise printing and alignment. These systems, while accurate, 
+are costly, infrastructure-dependent, and lack portability—
+posing limitations in decentralized or resource-limited 
+educational settings [7]. 
+With the increasing availability and performance of 
+smartphone cameras, mobile-based OMR systems have 
+gained attention as cost-effective alternatives. However, such 
+systems must overcome several challenges, including 
+variations in lighting, perspective distortion, and inconsistent 
+user handling [8]. To address these challenges, recent work 
+has incorporated computer vision and deep learning methods 
+to enhance document capture robustness and response 
+recognition. 
+Object detection models such as YOLO (You Only Look 
+Once) have shown strong performance in localizing objects in 
+real-time applications. YOLOv8, the latest iteration, offers 
+improved accuracy and speed [9], making it suitable for 
+mobile deployments. Additionally, template matching 
+remains a reliable method for detecting fixed visual features, 
+such as alignment markers, when geometric consistency is 
+required. 
+This work builds upon these advancements by integrating 
+image 
+dewarping, 
+YOLOv8-based 
+field 
+localization, 
+template-based landmark detection, and a custom Cross-
+Linear Area (CLA) algorithm to enable reliable, end-to-end 
+OMR processing directly from smartphone-captured images. 
+IV. METHODOLOGY 
+The proposed Automated Optical Marker Exam 
+Evaluation System is designed to operate end-to-end from 
+image acquisition to structured output generation, leveraging 
+standard smartphone cameras and the novel Cross-Linear 
+Area (CLA) algorithm for robust mark detection. The 
+complete methodology consists of several sequential stages, 
+as detailed in Fig 1. 
+ 
+Fig. 1. Overall of Proposed Method 
+A.  Image Acquisition 
+     The examination answer sheet is captured using a 
+smartphone camera. To enhance robustness against 
+environmental variability, users are guided to position the 
+sheet within a visible frame, but strict alignment is not 
+mandatory. Captured images are stored at high resolution to 
+preserve detail necessary for subsequent processing. 
+B. Image Dewarping 
+Smartphone-captured images often exhibit perspective 
+distortions that must be corrected to ensure accurate optical 
+mark recognition. The system performs image dewarping 
+through homography-based transformation [10]. Initially, 
+edges are detected using the Canny algorithm, followed by 
+contour detection to identify the sheet boundary, assumed as 
+the largest quadrilateral. The four corner points — Top-Left 
+(TL), Top-Right (TR), Bottom-Right (BR), and Bottom-Left 
+(BL) — are extracted and ordered. A homograph matrix 𝐇∈
+ℝ!×! is then computed to map the distorted quadrilateral to a 
+rectangular reference frame, satisfying Equation (1). 
+ 
+ 
+$
+𝑥#
+𝑦#
+1
+( = 𝐇$
+𝑥
+𝑦
+1
+( 
+(1) 
+ 
+where (𝑥, 𝑦) are the original coordinates and (𝑥′, 𝑦′) are the 
+corrected coordinates. The matrix H is estimated using the 
+Direct Linear Transformation (DLT) method from four point 
+correspondences. Finally, the image is warped using the 
+inverse homography 𝐇$%  to obtain a rectified, top-down 
+view suitable for further processing. Fig. 2 demonstrated an 
+input (a) and the dewarped image (b).  
+ 
+979-8-3315-1258-3/25/$31.00 ©2025 IEEE 
+SNPD 2025, June 25-27, 2025, Busan, Korea
+462
+Authorized licensed use limited to: Burapha University provided by UniNet. Downloaded on October 07,2026 at 03:48:19 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- PAGE 3 ---
+ 
+Fig. 2. Document Dewarpping, input image (a), output image (b) 
+C.  Localization of Structural Components 
+     After dewarping, the system uses YOLOv8 object 
+detection to localize key structural components on the answer 
+sheet, including Exam No., Page No., School ID, Subject ID, 
+Student ID, and Template No. YOLOv8 is trained on 
+annotated answer sheet images, with each field labeled as a 
+unique class. During inference, the model detects bounding 
+boxes 𝑏& = (𝑥, 𝑦, 𝑤, ℎ, 𝑐) . for each component. Non-
+Maximum Suppression (NMS) is applied to filter overlapping 
+detections. The output in Fig. 3 (a) – (f), consequently, 
+includes the bounding box and associated class, which is used 
+to extract and interpret metadata content. 
+ 
+Fig. 3. Components identification 
+D. Cropping of Answer Marker Area 
+     After component localization, YOLOv8 is used to detect 
+the region containing all candidate answer markers, labeled 
+as a single 𝑎𝑛𝑠𝑤𝑒𝑟_𝑎𝑟𝑒𝑎 class. The model is trained on 
+annotated sheets with bounding boxes enclosing the entire 
+answer grid. During inference, YOLOv8 outputs a bounding 
+box that is used to crop the answer region from the dewarped 
+image. This cropped region is then passed to the landmark 
+detection and OMR module for further analysis. 
+E. Cropping of Answer Marker Area 
+     To accurately identify the position and orientation of 
+answer markers within the cropped answer region, the system 
+employs template matching for landmark detection. These 
+landmarks—typically distinct shapes. Cross markers—serve 
+as positional anchors for aligning the grid of response 
+markers. 
+a)  Landmark Templates 
+    Template 
+images 
+are 
+created 
+in 
+advance 
+from 
+representative answer sheets, capturing the expected 
+appearance of landmarks (e.g., corners or bounding marks of 
+the answer grid). Each 𝑇∈ℝ'×(   is a grayscale patch 
+corresponding to a known landmark.  
+b)  Matching Process 
+     The cropped answer area 𝐼∈ℝ)×*  is scanned using 
+normalized cross-correlation to compute the matching score 
+at each location using Equation (2).  
+ 
+𝑅(𝑥, 𝑦) =
+∑
+ 
+!,# *𝐼(𝑥+ 𝑖, 𝑦+ 𝑗) −𝐼̅$,%1[𝑇(𝑖, 𝑗) −𝑇4]
+6∑
+ 
+!,# *𝐼(𝑥+ 𝑖, 𝑦+ 𝑗) −𝐼̅$,%1
+& ∑
+ 
+!,# [𝑇(𝑖, 𝑗) −𝑇4]&
+ 
+(2) 
+Where: 
+𝑅(𝑥, 𝑦) is the correlation score at location (𝑥, 𝑦) 
+𝐼̅+,- is the mean of the image patch under the template, 
+𝑇< is the mean intensity of the template. 
+The final landmark coordinates are used to infer the grid 
+geometry (rows, columns, spacing), allowing precise 
+alignment of the cross-linear areas over the answer bubbles 
+as shown in Fig. 4. 
+ 
+Fig. 4. Landmark Detection 
+F. Optical Mark Recognition Using Cross-Linear Area 
+Algorithm 
+     The core of the recognition process utilizes the proposed 
+Cross-Linear Area (CLA) algorithm. Each marker region is 
+systematically scanned along multiple linear cross-sections, 
+and the density of dark pixels along these paths is analyzed. 
+The CLA approach mitigates errors caused by uneven 
+shading and partial markings, offering superior robustness 
+compared to conventional global thresholding. After 
+landmarks were identified, the line between the opposite 
+landmark were created as demonstrated in Fig. 5. 
+ 
+ 
+ 
+979-8-3315-1258-3/25/$31.00 ©2025 IEEE 
+SNPD 2025, June 25-27, 2025, Busan, Korea
+463
+Authorized licensed use limited to: Burapha University provided by UniNet. Downloaded on October 07,2026 at 03:48:19 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- PAGE 4 ---
+ 
+Fig. 5. Optical Mark Recognition Using Cross-Linear Area 
+By using the cross line from landmark, Fig. 6 shows the 
+interested area (c) to determination is expanded by 𝑟 
+circularly from centroid (b). 
+ 
+Fig. 6. Centroid Area Expansion 
+G. Student Answer Detection 
+     For each marker, the ratio of dark pixels detected within 
+the cross-linear paths is calculated. Fig. 7 demonstrated if the 
+ratio exceeds a predefined threshold, the marker is classified 
+as "filled" (a) Otherwise, it is considered "unfilled" (b). This 
+binary classification is performed independently for each 
+answer option. 
+ 
+Fig. 7. Student Answer Detection 
+The algorithm of Cross-linear and Answer Detection can be 
+described as Algorithm I 
+ 
+H. Answer Mapping and Output Generation 
+Detected answers are mapped to their corresponding 
+questions based on the predefined template layout. The final 
+output, including metadata (Exam No., Student ID, etc.) and 
+student responses, is structured in JSON format for easy 
+integration with external systems such as grading servers, 
+educational databases, or learning management systems. 
+V. EXPERIMENTAL RESULT 
+To validate the effectiveness of the proposed system, 
+experiments were conducted on a dataset of 500 answer 
+sheets captured using various smartphone models under 
+diverse real-world conditions. The dataset included five 
+distinct answer sheet templates with variations in lighting, 
+perspective distortion, and paper alignment to simulate 
+practical usage scenarios. The performance can be detailed in 
+the Table below. 
+TABLE I PERFOMANCE DETAILS 
+Component 
+Accuracy (%) Precision (%) Recall (%) 
+Structural Field 
+Detection 
+(YOLOv8) 
+98.4 
+97.9 
+98.7 
+Answer Area 
+Detection 
+99.2 
+99.0 
+99.5 
+Landmark 
+Detection 
+(Template 
+Matching) 
+97.5 
+— 
+— 
+Answer Mark 
+Recognition (CLA 
+OMR) 
+96.8 
+95.4 
+97.9 
+     The performance of the system was evaluated based on 
+several key criteria, including structural field detection 
+accuracy, answer area localization, landmark detection, and 
+Optical Mark Recognition (OMR) accuracy using the Cross-
+Linear Area (CLA) algorithm. The YOLOv8 model achieved 
+a structural field detection accuracy of 98.4%, with a 
+precision of 97.9% and recall of 98.7%. The answer area was 
+correctly localized in 99.2% of cases, while landmark 
+detection using template matching achieved an accuracy of 
+97.5%. The CLA-based OMR module yielded an answer 
+recognition accuracy of 96.8%, with a precision of 95.4% and 
+recall of 97.9%. The average end-to-end processing time, 
+from image input to structured JSON output, was measured 
+at 1.35 seconds per sheet on a mid-range smartphone 
+(Snapdragon 778G, 6GB RAM). The system demonstrated 
+ 
+ 
+979-8-3315-1258-3/25/$31.00 ©2025 IEEE 
+SNPD 2025, June 25-27, 2025, Busan, Korea
+464
+Authorized licensed use limited to: Burapha University provided by UniNet. Downloaded on October 07,2026 at 03:48:19 UTC from IEEE Xplore.  Restrictions apply. 
+
+--- PAGE 5 ---
+robustness against skewed inputs up to 20 degrees and 
+performed reliably under moderate shadows and varied 
+lighting conditions. Most errors were attributable to 
+inconsistently marked bubbles, severe lighting gradients, or 
+sheets with physical damage such as folds or ink smudges. 
+These issues were partially addressed by incorporating 
+adaptive thresholding in the CLA algorithm and additional 
+pre-filtering for low-contrast regions. Overall, the results 
+indicate that the system is both accurate and efficient, making 
+it well-suited for mobile-based, scalable exam evaluation in 
+real-world environments. 
+VI. CONCLUSION AND DISCUSSION 
+     This paper presented a smartphone-based automated 
+system for evaluating multiple-choice exam answer sheets 
+using a combination of modern computer vision techniques, 
+including YOLOv8 object detection, template matching, and 
+a Cross-Linear Area (CLA) algorithm for Optical Mark 
+Recognition (OMR). The proposed system effectively 
+addresses common challenges in mobile-based document 
+processing, such as perspective distortion, template 
+variability, and inconsistent lighting. Experimental results on 
+a diverse dataset of answer sheets demonstrated high 
+accuracy in field detection and answer recognition, as well as 
+fast processing speeds suitable for real-time use on mid-range 
+mobile devices. The modular architecture, comprising 
+dewarping, component localization, answer region detection, 
+landmark alignment, and OMR, enables the system to be 
+easily adapted to different templates and deployment 
+contexts. Despite the strong performance, the system has 
+some limitations. Recognition accuracy may be affected by 
+heavily smudged or partially filled markers, and performance 
+can degrade under extreme lighting conditions or severe 
+image blur. Future work will focus on integrating adaptive 
+illumination correction, real-time feedback during capture, 
+and end-to-end deep learning approaches for bubble detection 
+to 
+further 
+improve 
+robustness 
+and 
+usability. 
+     In conclusion, the system offers a low-cost, portable, and 
+scalable solution for automated exam evaluation, particularly 
+valuable in resource-constrained educational environments 
+where traditional OMR scanners are impractical or 
+unavailable. 
+REFERENCES 
+ 
+[1] de Elias, E. M., Tasinaffo, P. M., & Hirata Jr, R. (2021). Optical mark 
+recognition: Advances, difficulties, and limitations. SN Computer 
+Science, 2(5), 367. 
+[2] Blahnik, V., & Schindelbeck, O. (2021). Smartphone imaging 
+technology 
+and 
+its 
+applications. Advanced 
+Optical 
+Technologies, 10(3), 145-232. 
+[3] Lainez, S. M. D., Gresos, L. J. Q., & Maganggo, V. K. A. (2024). An 
+Automated Entrance Examination Checker Using Optical Mark 
+Recognition. Journal of Computer, Software, and Program, 1(1), 8-13. 
+[4] Shafaghat, A., & Keyvanfar, A. (2022). Dynamic façades design 
+typologies, technologies, measurement techniques, and physical 
+performances across thermal, optical, ventilation, and electricity 
+generation outlooks. Renewable and Sustainable Energy Reviews, 167, 
+112647. 
+[5] Ravi, P., Ismail, A., & Kumar, N. (2021). The pandemic shift to remote 
+learning under resource constraints. Proceedings of the ACM on 
+Human-Computer Interaction, 5(CSCW2), 1-28. 
+[6] Vivek, M., Clintford, P. S., Maurya, A. K., & Jayapandian, N. (2023, 
+December). Enhanced automated online examination portal using 
+convolutional neural network. In 2023 4th International Conference on 
+Communication, Computing and Industry 6.0 (C216) (pp. 1-6). IEEE. 
+[7] Sancar, Y., Yavuz, U., & Karabey Aksakalli, I. (2024). Personal mark 
+density-based high-performance Optical Mark Recognition (OMR) 
+system using K-means clustering algorithm. Multimedia Tools and 
+Applications, 1-33. 
+[8] Hafeez, Q., Aslam, W., Aziz, R., & Aldehim, G. (2024). An Enhanced 
+Fault Tolerance Algorithm for Optical Mark Recognition Using 
+Smartphone Cameras. IEEE Access. 
+[9] Ali, M. L., & Zhang, Z. (2024). The YOLO framework: A 
+comprehensive review of evolution, applications, and benchmarks in 
+object detection. Computers, 13(12), 336. 
+[10] Xie, G. W., Yin, F., Zhang, X. Y., & Liu, C. L. (2021). Document 
+dewarping 
+with 
+control 
+points. 
+In Document 
+Analysis 
+and 
+Recognition–ICDAR 2021: 16th International Conference, Lausanne, 
+Switzerland, September 5–10, 2021, Proceedings, Part I 16 (pp. 466-
+480). Springer International Publishing. 
+[11] Human Services, Substance Abuse and Mental Health Services 
+Administration, Office of Applied Studies, August, 2013, 
+DOI:10.3886/ICPSR30122.v2 
+ 
+ 
+ 
+979-8-3315-1258-3/25/$31.00 ©2025 IEEE 
+SNPD 2025, June 25-27, 2025, Busan, Korea
+465
+Authorized licensed use limited to: Burapha University provided by UniNet. Downloaded on October 07,2026 at 03:48:19 UTC from IEEE Xplore.  Restrictions apply. 
