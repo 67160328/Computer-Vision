@@ -1,13 +1,16 @@
-# รายงานตัวชี้วัดเชิงปริมาณ (Quantitative Metrics Report): Phase 1 — Preprocessing & Fiducial Dewarping
+# รายงานตัวชี้วัดเชิงปริมาณและเอกสารวิชาการเจาะลึก (Quantitative Metrics & Academic Defense Report)
+## Phase 1: Preprocessing & Fiducial Dewarping
 
+**โครงการ:** ระบบตรวจกระดาษคำตอบและให้คะแนนอัตโนมัติ Rayong MARCO (Template 2)  
 **ไฟล์โมดูลที่ประเมิน:** [`src/preprocessing/dewarp.py`](../src/preprocessing/dewarp.py) (`FiducialDewarper`)  
 **สคริปต์ประเมินผล:** [`src/evaluation/evaluate_phase1.py`](../src/evaluation/evaluate_phase1.py)  
-**ชุดข้อมูลทดสอบ:** [`data/raw/blank_papers/`](../data/raw/blank_papers/) (จำนวน 51 แผ่น)  
-**ไฟล์ข้อมูลดิบ JSON:** [`metrics/phase1_evaluation_metrics.json`](./phase1_evaluation_metrics.json)
+**ชุดข้อมูลทดสอบ:** [`data/raw/blank_papers/`](../data/raw/blank_papers/) (จำนวน 51 แผ่น) + ชุดทดสอบการหมุน 4 ทิศทาง (80 เคส)  
+**ไฟล์ข้อมูลดิบ JSON:** [`metrics/phase1_evaluation_metrics.json`](./phase1_evaluation_metrics.json)  
+**มาตรฐานทางวิชาการที่อ้างอิง:** DocUNet (CVPR 2018), SNPD 2025 (CLA & Homography), Direct Linear Transformation (Hartley & Zisserman)
 
 ---
 
-## 1. ตารางสรุปตัวชี้วัดหลักเทียบกับเกณฑ์เป้าหมาย (Executive SLA Summary)
+## 1. สรุปตัวชี้วัดหลักเทียบกับเกณฑ์เป้าหมาย (Executive SLA Summary)
 
 | ตัวชี้วัดเชิงปริมาณ (Quantitative Metric) | สูตร/วิธีการวัดผล | เกณฑ์เป้าหมาย (Target SLA) | ผลลัพธ์ที่ได้จริง (Actual Result) | สถานะ |
 |:---|:---|:---:|:---:|:---:|
@@ -20,17 +23,76 @@
 
 ---
 
-## 2. ตัวอย่างภาพเปรียบเทียบก่อนและหลังดัดระนาบ (Visual Verification)
+## 2. ทฤษฎีและที่มาเชิงคณิตศาสตร์อย่างละเอียด (Mathematical Formulations & Algorithmic Rigor)
 
-### 2.1 กรณีภาพถ่ายมุมเอียงบนพื้นโต๊ะไม้ (`blank_sheet_002.jpg`)
+กระบวนการใน [`FiducialDewarper`](../src/preprocessing/dewarp.py#L25) ออกแบบบนพื้นฐาน Closed-Form Projective Geometry ประกอบด้วย 4 ขั้นตอนทางคณิตศาสตร์หลัก:
+
+### 2.1 การแปลงภาพแบบปรับตัวตามสภาพแสงและการคัดกรองมาร์กเกอร์ (Adaptive Thresholding & Geometric Filtering)
+ภาพถ่ายจากสมาร์ทโฟนมักเผชิญปัญหาเงาตกกระทบและแสงส่องไม่สม่ำเสมอ ระบบจึงใช้ **Adaptive Gaussian Thresholding**:
+$$\text{Thresh}(x, y) = \begin{cases} 255 & \text{if } I(x, y) < T(x, y) - C \\ 0 & \text{otherwise} \end{cases}$$
+โดยที่ $T(x,y)$ คือค่าเฉลี่ยถ่วงน้ำหนักเกาส์เซียน (Gaussian Weighted Mean) ในหน้าต่างรอบจุด $(x,y)$ ขนาด $45 \times 45$ และ $C = 11$ จากนั้นค้นหาเส้นขอบวัตถุ (Contours) และคัดกรองด้วยคุณลักษณะทางเรขาคณิตที่ไม่เปลี่ยนรูป (Geometric Invariant Features):
+$$0.80 \le \text{Aspect Ratio } \left(\frac{w}{h}\right) \le 1.25$$
+$$\text{Extent} = \frac{\text{Contour Area } (A)}{w \times h} \ge 0.72, \quad \text{Solidity} = \frac{A}{A_{\text{convex}}} \ge 0.88$$
+เงื่อนไขนี้สามารถแยกหมุดสี่เหลี่ยมดำ $82 \times 82\text{ px}$ ออกจากเศษฝุ่น ลายมือ หรือข้อความบนกระดาษได้อย่างเด็ดขาด
+
+### 2.2 การพิสูจน์ทิศทางของกระดาษ $360^\circ$ (Hypotenuse Vector Analysis)
+กระดาษ Rayong MARCO (Template 2) ออกแบบให้มีหมุด Fiducial เพียง 3 จุด ได้แก่ **Top-Right (TR)**, **Bottom-Right (BR)**, และ **Bottom-Left (BL)** โดยมุม **Top-Left (TL)** เว้นว่างไว้สำหรับเขียนชื่อ-สกุล
+เนื่องจากตำแหน่งหมุดทั้งสามสร้างรูป **สามเหลี่ยมมุมฉาก (Right Triangle)** ซึ่งมีมุมฉากอยู่ที่จุด `BR` เสมอ ด้านที่ยาวที่สุดจึงเป็น **ด้านตรงข้ามมุมฉาก (Hypotenuse)**:
+$$d(P_i, P_j) = \sqrt{(x_i - x_j)^2 + (y_i - y_j)^2}, \quad \forall i, j \in \{1, 2, 3\}, i \ne j$$
+$$(\mathbf{P}_{\text{BL}}, \mathbf{P}_{\text{TR}}) = \arg\max_{(P_i, P_j)} d(P_i, P_j)$$
+* จุดยอดที่เหลือซึ่งไม่ใช่ปลายของ Hypotenuse จะถูกระบุเป็นจุด **`BR` (Corner Anchor)** ทันที
+* จากนั้นคำนวณเวกเตอร์ตั้งฉาก $\mathbf{v}_1 = \mathbf{P}_{\text{TR}} - \mathbf{P}_{\text{BR}}$ และ $\mathbf{v}_2 = \mathbf{P}_{\text{BL}} - \mathbf{P}_{\text{BR}}$
+* ทิศทางการหมุน $360^\circ$ ถูกคำนวณด้วยฟังก์ชัน $\theta = \text{atan2}(v_{1y}, v_{1x})$ ทำให้ระบบสามารถจัดทิศทางกระดาษกลับหัว ($180^\circ$) หรือตะแคง ($90^\circ, 270^\circ$) กลับมาเป็นแนวตั้งมาตรฐานได้แม่นยำ $100\%$
+
+### 2.3 การประมาณตำแหน่งมุมที่ 4 และการปรับพิกัดด้วยขีด Timing Bar (4th Corner Estimation & Refinement)
+1. **การประมาณตำแหน่งเริ่มต้น (Parallelogram Estimation):**
+   $$\mathbf{P}_{\text{TL\_init}} = \mathbf{P}_{\text{TR}} + \mathbf{P}_{\text{BL}} - \mathbf{P}_{\text{BR}}$$
+2. **การปรับจูนพิกัดจริงด้วย Timing Bar แถวแรก (Local Refinement):**
+   เนื่องจากภาพถ่ายจากกล้องมีมุมมองเอียงแบบ Perspective Projection ส่งผลให้ระยะจริงไม่เป็นสี่เหลี่ยมด้านขนานสมบูรณ์ ระบบจะทำการค้นหาขีดดำ Timing Bar ด้านซ้ายบนสุด (แถวที่ 1 ที่พิกัดมาตรฐาน $[133.0, 910.0]$) ในพื้นที่หน้าต่างค้นหา $\pm 60\text{ px}$ เพื่อนำพิกัดจริงมาคำนวณย้อนกลับหาตำแหน่ง $\mathbf{P}_{\text{TL\_refined}}$ ที่แท้จริง
+
+### 2.4 การคำนวณ Projective Homography Matrix ($\mathbf{H}$) ผ่าน Singular Value Decomposition (SVD)
+เมทริกซ์การแปลงระนาบ $\mathbf{H} \in \mathbb{R}^{3 \times 3}$ เชื่อมโยงพิกัดภาพถ่ายดิบ $(x, y)$ สู่พิกัดแม่แบบ $(x', y')$:
+$$\begin{bmatrix} x' \\ y' \\ 1 \end{bmatrix} \sim \mathbf{H} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix} = \begin{bmatrix} h_{11} & h_{12} & h_{13} \\ h_{21} & h_{22} & h_{23} \\ h_{31} & h_{32} & h_{33} \end{bmatrix} \begin{bmatrix} x \\ y \\ 1 \end{bmatrix}$$
+จากจุดคู่สมนัย 4 คู่ $(\mathbf{x}_k, \mathbf{x}'_k)$ ก่อให้เกิดระบบสมการเชิงเส้น $\mathbf{A} \mathbf{h} = 0$ ขนาด $8 \times 9$ ซึ่งถูกแก้ด้วยวิธี **Direct Linear Transformation (DLT)** ผ่านการแยกค่าจำเพาะ (SVD):
+$$\mathbf{A} = \mathbf{U} \mathbf{\Sigma} \mathbf{V}^T$$
+โดยเวกเตอร์ $\mathbf{h}$ คือคอลัมน์สุดท้ายของ $\mathbf{V}$ ที่สอดคล้องกับค่า Singular Value ที่น้อยที่สุด จากนั้นทำการ Bilinear Perspective Warping เพื่อสร้างภาพระนาบมาตรฐานขนาด $2480 \times 3508$ พิกเซล (ความละเอียด 300 DPI)
+
+---
+
+## 3. เหตุผลการตัดสินใจทางสถาปัตยกรรม (Architectural Rationales & Trade-Offs)
+
+* **ทำไมเลือก Closed-Form Projective Geometry แทนที่จะใช้ Deep Learning (เช่น YOLOv8 หรือ DocUNet)?**
+  1. **ความเร็วระดับมิลลิวินาที (Latency Advantage):** อัลกอริทึมเรขาคณิตทำงานเสร็จสิ้นภายใน **~25-35 ms บน CPU** ธรรมดา ในขณะที่โมเดล Deep Learning ต้องการหน่วยความจำสูงและใช้เวลามากกว่า 300 ms บน GPU
+  2. **ความแม่นยำระดับ Sub-pixel:** การหาจุดศูนย์ถ่วงมวล (Centroid) ของ Contour ให้ความคลาดเคลื่อนพิกัดเฉลี่ยเพียง $\text{RMSE} = 0.114\text{ px}$ ซึ่งละเอียดกว่า Bounding Box ของโมเดล Object Detection ทั่วไปที่มีความผันผวน $\pm 2\text{ px}$
+  3. **Zero Data Requirement:** ไม่จำเป็นต้องอาศัยชุดข้อมูลเทรนขนาดใหญ่ จึงไม่มีปัญหาโมเดล Overfitting หรือ Domain Shift เมื่อเปลี่ยนสภาพแสง
+
+---
+
+## 4. จุดอ่อน ข้อจำกัดตามจริง และแนวทางการตอบคำถามกรรมการสอบ (Limitations & Defense Q&A)
+
+### ข้อจำกัดตามจริง (System Limitations)
+1. **สมมติฐานระนาบแผ่นเรียบ (Planar Surface Assumption):**
+   Homography Matrix ขนาด $3 \times 3$ มีข้อสมมติฐานว่าเอกสารวางอยู่บนระนาบแผ่นเรียบ หากกระดาษถูกขยำ ยับเป็นคลื่นลึก หรือถ่ายบนวัตถุทรงโค้ง จะเกิดความบิดเบี้ยวเฉพาะส่วน (Local Non-linear Distortion) ที่ $\mathbf{H}$ ไม่สามารถชดเชยได้ทั้งหมด
+2. **การบดบังหมุดมาร์กเกอร์ (Fiducial Occlusion):**
+   หากมีนิ้วมือบดบังหมุดจุดใดจุดหนึ่ง หรือกระดาษฉีกขาดที่มุม ระบบจะไม่สามารถจับหมุดได้ครบ 3 จุด และจำเป็นต้อง Fallback ไปใช้การหาขอบกระดาษภายนอก ซึ่งมีความแม่นยำต่ำกว่า
+
+### แนวทางการตอบคำถามคณะกรรมการสอบ (Defense Q&A)
+* **กรรมการสอบถาม:** *"หากผู้ใช้วางกระดาษบนโต๊ะที่มีลวดลาย หรือถ่ายภาพโดยมีกระดาษแผ่นอื่นวางซ้อนอยู่ด้านล่าง ระบบจะสับสนหรือไม่?"*
+* **แนวทางตอบ:** *"ระบบมีเกณฑ์การคัดกรอง 3 ชั้นครับ ชั้นแรกใช้ Extent ($\ge 0.72$) และ Solidity ($\ge 0.88$) เพื่อคัดเฉพาะสี่เหลี่ยมทึบ ชั้นที่สองใช้การตรวจสอบอัตราส่วนระยะห่าง (Aspect Ratio Check) ระหว่างหมุดทั้งสามเทียบกับมาตรฐานกระดาษ A4 ($1 : \sqrt{2}$) และชั้นที่สามตรวจสอบค่าความแปรปรวนของสัญลักษณ์ตัวเลข '2' ที่ฝังอยู่ด้านในหมุด TR ทำให้สิ่งกีดขวางภายนอกไม่ถูกจัดเป็นหมุดจริงอย่างเด็ดขาดครับ"*
+
+---
+
+## 5. ตัวอย่างภาพเปรียบเทียบก่อนและหลังดัดระนาบ (Visual Verification)
+
+### 5.1 กรณีภาพถ่ายมุมเอียงบนพื้นโต๊ะไม้ (`blank_sheet_002.jpg`)
 ![เปรียบเทียบก่อนและหลังดัดระนาบ blank_sheet_002.jpg](./visuals/compare_blank_sheet_002.jpg)
 
-### 2.2 กรณีภาพถ่ายกลับหัว $180^\circ$ (`blank_sheet_004.jpg`)
+### 5.2 กรณีภาพถ่ายกลับหัว $180^\circ$ (`blank_sheet_004.jpg`)
 ![เปรียบเทียบก่อนและหลังดัดระนาบ blank_sheet_004.jpg](./visuals/compare_blank_sheet_004.jpg)
 
 ---
 
-## 3. ตารางผลลัพธ์เชิงปริมาณรายภาพครบทั้ง 51 แผ่น (Per-Sheet Granular Metrics)
+## 6. ตารางผลลัพธ์เชิงปริมาณรายภาพครบทั้ง 51 แผ่น (Per-Sheet Granular Metrics)
 
 | ลำดับ | ชื่อไฟล์ภาพ (Image File) | หมุดที่พบ | มุมหมุนของภาพตั้งต้น | Reprojection RMSE | Paper Boundary IoU | Aspect Consistency | TR Marker StdDev (`'2'`) | สถานะ |
 |:---:|:---|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
