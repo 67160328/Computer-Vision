@@ -15,3 +15,16 @@
 | **Phase 4** | **[Phase4_Metrics_Report.md](./Phase4_Metrics_Report.md)** | [`phase4_evaluation_metrics.json`](./phase4_evaluation_metrics.json) | **เสร็จสมบูรณ์ (PASS)** | A–Z Val Top-1 **98.77%** (Top-3 **99.80%**), Real Exam Char Top-1 **100.0% (786/786)**, Word Match **100.0% (72/72)** |
 | **Phase 4B** | **[Phase4B_Digit_Metrics_Report.md](./Phase4B_Digit_Metrics_Report.md)** | [`digit_recognition_metrics.json`](./digit_recognition_metrics.json) | **เสร็จสมบูรณ์ (PASS)** | Digit 0–9 Val Top-1 **99.77%**, Unseen Test Top-1 **99.58%** (Top-3 **99.95%**), Blank Purple Box Specificity **100.0% (798/798)**, Purple Box Digit Acc **100.0% (96/96)** |
 | **Phase 5** | **[Phase5_Metrics_Report.md](./Phase5_Metrics_Report.md)** | [`phase5_evaluation_metrics.json`](./phase5_evaluation_metrics.json) | **เสร็จสมบูรณ์ (PASS)** | Exact Match Word Accuracy **99.21% (250/252 ข้อ)**, CER **0.10%**, Score Pearson $r$ = **0.9994**, Latency **~2.48 s/แผ่น** |
+
+---
+
+## 🎓 เอกสารการนำเสนอเชิงวิชาการและการสอบป้องกัน (Academic Defense Deep Dive)
+
+สำหรับเอกสารฉบับวิชาการ (Academic Paper & Defense Manual) ที่อธิบายเจาะลึก:
+* **สูตรคณิตศาสตร์และทฤษฎีรองรับ (Mathematical Formulations & Rigor)**
+* **เหตุผลการตัดสินใจทางสถาปัตยกรรม (Architectural Rationales)**
+* **ลิงก์เชื่อมโยงไปยังซอร์สโค้ดและโมเดลโดยตรง (Code Symbol Deep Links)**
+* **จุดอ่อนและข้อจำกัดตามจริง พร้อมแนวทางตอบคำถามคณะกรรมการสอบ (Limitations & Defense Guidance)**
+
+สามารถศึกษาได้ที่: **[Academic Defense Deep-Dive Technical Manual (Academic_Defense_Deep_Dive_Manual.md)](./Academic_Defense_Deep_Dive_Manual.md)**
+

@@ -56,7 +56,8 @@
 
 ## 📊 ตัวชี้วัดเชิงปริมาณที่ผ่านการทดสอบ (Current Benchmark Metrics)
 
-สามารถตรวจสอบรายงานตัวชี้วัดฉบับเต็มได้ที่ [`metrics/README.md`](./metrics/README.md)
+สามารถตรวจสอบรายงานตัวชี้วัดฉบับเต็มได้ที่ [`metrics/README.md`](./metrics/README.md)  
+📖 **เอกสารเจาะลึกทางวิชาการและการสอบป้องกัน (Academic Defense Deep-Dive Manual):** [`metrics/Academic_Defense_Deep_Dive_Manual.md`](./metrics/Academic_Defense_Deep_Dive_Manual.md)
 
 ### Phase 1: Preprocessing & Dewarping
 - **3-Marker Detection Recall:** **`100.0%`** (51/51 แผ่น)
