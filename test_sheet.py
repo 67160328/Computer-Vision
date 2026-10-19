@@ -34,6 +34,31 @@ def get_default_answer_key(image_name: str) -> dict:
     if image_name in TEST_SPLIT_ANSWER_KEYS:
         return TEST_SPLIT_ANSWER_KEYS[image_name]
     
+    # หากเป็นภาพทดสอบคำตอบยาว (ทดสอบคำตอบ.jpg)
+    if "ทดสอบ" in image_name:
+        return {
+            1: "ELECTROENCEPHALOGRAM",
+            2: "UNCHARACTERISTICALLY",
+            3: "COUNTERREVOLUTIONARY",
+            4: "INCOMPREHENSIBILITY",
+            5: "DISPROPORTIONATELY",
+            6: "PSYCHOPHARMACOLOGY",
+            7: "TRANSUBSTANTIATION",
+            8: "OVERSIMPLIFICATION",
+            9: "CONSTITUTIONALITY",
+            10: "TELECOMMUNICATION",
+            11: "ENVIRONMENTALISTS",
+            12: "STRAIGHTFORWARDLY",
+            13: "INDIVIDUALIZATION",
+            14: "MISUNDERSTANDINGS",
+            15: "DISQUALIFICATION",
+            16: "EXTRATERRESTRIAL",
+            17: "BIOTECHNOLOGICAL",
+            18: "ACKNOWLEDGEMENTS",
+            19: "JURISDICTIONAL",
+            20: "CYBERSECURITY",
+        }
+    
     # หากเป็นภาพใหม่ที่ไม่มีเฉลย ให้ใช้ชุดเฉลยคำศัพท์มาตรฐาน
     return {
         1: "SCHEME", 2: "PASSION", 3: "BLEND", 4: "MAINTAIN", 5: "LAYOUT",
@@ -41,6 +66,7 @@ def get_default_answer_key(image_name: str) -> dict:
         11: "SPLIT", 12: "ADEQUATE", 13: "REWARD", 14: "EMBRACE", 15: "BROAD",
         16: "TREASURE", 17: "FREEZE", 18: "JUSTICE", 19: "GRACE", 20: "VALIDATE",
     }
+
 
 
 def main():
