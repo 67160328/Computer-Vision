@@ -74,13 +74,13 @@ def main():
     parser.add_argument(
         "image_path",
         nargs="?",
-        default="data/Test/ตัวอย่างที่ 3.jpg",
-        help="พาธไฟล์ภาพกระดาษคำตอบ (เช่น data/Test/ตัวอย่างที่ 3.jpg)",
+        default="data/Test/ทดสอบคำตอบ 3.jpg",
+        help="พาธไฟล์ภาพกระดาษคำตอบ (เช่น data/Test/ทดสอบคำตอบ 3.jpg)",
     )
     parser.add_argument(
         "--output",
         "-o",
-        default="metrics/visuals/single_test_result.jpg",
+        default="metrics/visuals/single_test_result_3.jpg",
         help="พาธสำหรับบันทึกภาพผลการตรวจพร้อม Overlay",
     )
     args = parser.parse_args()

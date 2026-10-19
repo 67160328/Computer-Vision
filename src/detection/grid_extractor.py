@@ -216,21 +216,44 @@ class Template2GridExtractor:
         matched = np.zeros((self.NUM_QUESTIONS, 2), dtype=np.float32)
         if len(dedup) >= 2:
             pts_arr = np.array(dedup, dtype=np.float32)
-            dy_offset = float(np.median(pts_arr[:, 1]) - np.median(self.CANONICAL_ROW_YS))
+            # คำนวณ dy_offset แบบ Consensus Voting เทียบกับขีดมาตรฐานที่ใกล้ที่สุด
+            # เพื่อไม่ให้ค่า Offset เลื่อนเมื่อมีขีดบนสุดหรือล่างสุดขาดหายไป
+            offsets = []
+            for p in dedup:
+                dists = [p[1] - can_y for can_y in self.CANONICAL_ROW_YS]
+                nearest_j = int(np.argmin(np.abs(dists)))
+                if abs(dists[nearest_j]) < 55.0:
+                    offsets.append(dists[nearest_j])
+            dy_offset = float(np.median(offsets)) if offsets else 0.0
             med_x = float(np.median(pts_arr[:, 0]))
         else:
             dy_offset = 0.0
             med_x = default_x
 
+        used_indices = set()
         for i in range(self.NUM_QUESTIONS):
             exp_y = self.CANONICAL_ROW_YS[i] + dy_offset
-            if dedup:
-                dists = [abs(p[1] - exp_y) for p in dedup]
-                min_idx = int(np.argmin(dists))
-                if dists[min_idx] < 45.0:
-                    matched[i] = dedup[min_idx]
-                    continue
-            matched[i] = [med_x, exp_y]
+            best_idx = None
+            best_dist = 48.0
+            for d_idx, p in enumerate(dedup):
+                if d_idx not in used_indices:
+                    d = abs(p[1] - exp_y)
+                    if d < best_dist:
+                        best_dist = d
+                        best_idx = d_idx
+            if best_idx is not None:
+                matched[i] = dedup[best_idx]
+                used_indices.add(best_idx)
+            else:
+                matched[i] = [med_x, exp_y]
+
+        # ปรับความตรงของแกน X ด้วย Linear Fit
+        if len(used_indices) >= 10:
+            slope_x, intercept_x = np.polyfit(matched[:, 1], matched[:, 0], 1)
+            for i in range(self.NUM_QUESTIONS):
+                pred_x = intercept_x + slope_x * matched[i, 1]
+                if abs(matched[i, 0] - pred_x) > 12.0 or i not in used_indices:
+                    matched[i, 0] = pred_x
 
         return matched, raw_found_count
 

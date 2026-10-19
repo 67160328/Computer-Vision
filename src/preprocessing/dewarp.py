@@ -426,7 +426,7 @@ class FiducialDewarper:
         ค้นหาจุดศูนย์กลางของขีดดำ Timing Bar ซ้ายบนสุด (ข้อที่ 1) เพื่อใช้เป็นจุดอ้างอิงที่ 4 จริง (True 4th Projective Anchor)
         ตรวจสอบความเรียงตัวเป็นเส้นตรงและระยะห่างระหว่างแถว (~115 px) อย่างน้อย 12 แถวเพื่อป้องกันสัญญาณรบกวนจากขอบโต๊ะไม้
         """
-        y_top, y_bot = 740, 3230
+        y_top, y_bot = 580, 3230
         x_min, x_max = 60, 430
         roi = rectified_norm_gray[y_top:y_bot, x_min:x_max]
         dark = (roi < 178).astype(np.uint8) * 255
@@ -456,7 +456,7 @@ class FiducialDewarper:
         if len(dedup) < 12:
             return None
 
-        # กรองเฉพาะชุดขีดดำที่มีระยะห่างแถวสม่ำเสมอ (~100..132 px) โดยต้องเริ่มจากขีดบนสุดที่มีขีดถัดไปห่าง ~115 px
+        # กรองเฉพาะชุดขีดดำที่มีระยะห่างแถวสม่ำเสมอ (~100..135 px)
         valid_chain = []
         for i in range(len(dedup)):
             chain = [dedup[i]]
@@ -476,13 +476,18 @@ class FiducialDewarper:
         if len(valid_chain) < 12:
             return None
 
-        pts = np.array(valid_chain[:20], dtype=np.float32)
+        pts = np.array(valid_chain, dtype=np.float32)
         slope_x, intercept_x = np.polyfit(pts[:, 1], pts[:, 0], 1)
-        top_y = float(pts[0, 1])
-        if 750.0 <= top_y <= 990.0:
-            top_x = float(intercept_x + slope_x * top_y)
-            return (top_x, top_y)
-        return None
+        dy_steps = np.diff(pts[:, 1])
+        med_pitch = float(np.median(dy_steps)) if len(dy_steps) > 0 else 116.0
+        
+        # หากตรวจพบขีดล่างสุดแถว 20 (y > 2880) ให้คำนวณตำแหน่งแถว 1 ย้อนกลับขึ้นไป 19 ช่องเสมอ
+        if pts[-1, 1] > 2880.0 and len(pts) >= 14:
+            top_y = float(pts[-1, 1] - 19.0 * med_pitch)
+        else:
+            top_y = float(pts[0, 1])
+        top_x = float(intercept_x + slope_x * top_y)
+        return (top_x, top_y)
 
     def _evaluate_rectified_quality(
         self, rectified_norm_gray: np.ndarray

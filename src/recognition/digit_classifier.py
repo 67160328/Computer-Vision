@@ -237,6 +237,11 @@ class DigitRecognizerEngine:
         self.mean_norm = 0.1307
         self.std_norm = 0.3081
 
+        if weights_path is None:
+            default_weights = os.path.join(os.path.dirname(__file__), "..", "..", "models", "hcr_resnet28_digits.pt")
+            if os.path.exists(default_weights):
+                weights_path = default_weights
+
         if weights_path and os.path.exists(weights_path):
             state = torch.load(weights_path, map_location=self.device)
             if "model_state_dict" in state:
@@ -285,14 +290,33 @@ class DigitRecognizerEngine:
             logits = self.model(tensor_batch) / self.temperature
             probs = F.softmax(logits, dim=-1).cpu().numpy()
 
-            for i, (f_name, c_idx, _, _) in enumerate(non_empty_meta):
+            for i, (f_name, c_idx, _, glyph_img) in enumerate(non_empty_meta):
                 p = probs[i]
                 top3_idx = np.argsort(p)[::-1][:3]
                 t1, t2 = int(top3_idx[0]), int(top3_idx[1])
                 conf = float(p[t1])
                 margin = float(p[t1] - p[t2])
                 top3_list = [(DIGITS[int(k)], round(float(p[int(k)]), 4)) for k in top3_idx]
-                pred_lookup[(f_name, c_idx)] = (DIGITS[t1], conf, margin, top3_list)
+                pred_digit = DIGITS[t1]
+
+                # Topological Disambiguation for 7 vs 9:
+                # เลข 9 ตามสัณฐานวิทยาต้องมีวงปิด (Closed Loop / Euler Hole) บริเวณส่วนบน
+                # หากทำนายเป็น 9 แต่ไม่มีวงปิดด้านใน (No Enclosed Cavity) และมี '7' ใน Top-3
+                if pred_digit == "9":
+                    bin_g = (glyph_img > 60).astype(np.uint8) * 255
+                    cnts, hier = cv2.findContours(bin_g, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+                    has_hole = False
+                    if hier is not None:
+                        for k, h in enumerate(hier[0]):
+                            if h[3] != -1 and cv2.contourArea(cnts[k]) >= 4.0:
+                                has_hole = True
+                    if not has_hole and conf < 0.85:
+                        top3_dict = dict(top3_list)
+                        if "7" in top3_dict and top3_dict["7"] >= 0.03:
+                            pred_digit = "7"
+                            conf = max(conf, float(top3_dict["7"]))
+
+                pred_lookup[(f_name, c_idx)] = (pred_digit, conf, margin, top3_list)
 
         # ประกอบผลลัพธ์รายแถว (14 ช่องต่อแถว)
         for field_name in ["student_id", "subject_id", "school_id"]:
