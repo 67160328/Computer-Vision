@@ -322,6 +322,163 @@ class Template2GridExtractor:
 
         return (x1, y1, x2, y2)
 
+    def _extract_row_cell_bboxes(
+        self,
+        norm_gray: np.ndarray,
+        xL: float,
+        yL: float,
+        xR: float,
+        yR: float,
+        default_half_h: int,
+    ) -> List[Tuple[int, int, int, int]]:
+        """
+        Multi-Segment Row Horizontal Border Tracking & 21-Column Dividing Line Partitioning:
+        - แก้ปัญหาขีดดำบอกตำแหน่งข้อ (Timing Bar) เยื้องศูนย์จากกึ่งกลางแถวตารางจริง (+-16 px)
+        - สแกนหาคู่เส้นขอบบน-ล่างของทั้งแถวใน 9 ช่วงแนวนอน (ระยะห่างขอบบน-ล่าง 80..92 px)
+          แล้วฟิตเส้นโค้งพหุนาม (Polynomial Curve) ตลอดความกว้างแถว ป้องกันช่องเดี่ยวกระโดดขึ้น/ลง
+        - ค้นหาเส้นแบ่งคอลัมน์แนวตั้งทั้ง 21 เส้นของแถวพร้อมปรับความเรียบต่อเนื่อง (ไร้ช่องว่าง/ทับซ้อน)
+        """
+        h_img, w_img = norm_gray.shape
+        canonical_span = self.CANONICAL_RIGHT_X - self.CANONICAL_LEFT_X
+        actual_span = xR - xL
+        scale_x = actual_span / canonical_span
+        slope = (yR - yL) / (actual_span + 1e-5)
+
+        # 1. ค้นหาคู่เส้นขอบแนวนอน (บน-ล่าง) ของแถวจาก 9 ช่วงตลอดความกว้างตาราง
+        seg_centers = np.linspace(340.0, 2140.0, 9)
+        seg_x: List[float] = []
+        seg_y1: List[float] = []
+        seg_y2: List[float] = []
+
+        for scx in seg_centers:
+            sx1 = max(250, int(round(scx - 180)))
+            sx2 = min(2240, int(round(scx + 180)))
+            py = yL + slope * (scx - xL)
+            sy1 = max(0, int(round(py - 68)))
+            sy2 = min(h_img, int(round(py + 68)))
+            strip = norm_gray[sy1:sy2, sx1:sx2]
+            if strip.shape[0] < 95:
+                continue
+            dark = 255.0 - np.mean(strip, axis=1)
+            best_score = -1.0
+            best_t, best_b = None, None
+            for t in range(0, len(dark) - 78):
+                if dark[t] < 14.0:
+                    continue
+                b_min = t + 80
+                b_max = min(len(dark), t + 92)
+                if b_min >= b_max:
+                    continue
+                b = b_min + int(np.argmax(dark[b_min:b_max]))
+                if dark[b] < 14.0:
+                    continue
+                score = float(dark[t] + dark[b])
+                if score > best_score:
+                    best_score = score
+                    best_t, best_b = sy1 + t, sy1 + b
+            if best_t is not None and best_b is not None:
+                seg_x.append(float(scx))
+                seg_y1.append(float(best_t))
+                seg_y2.append(float(best_b))
+
+        poly_y1 = None
+        poly_y2 = None
+        if len(seg_x) >= 3:
+            lin_y1 = np.polyval(np.polyfit(seg_x, seg_y1, 1), seg_x)
+            inliers = [i for i in range(len(seg_x)) if abs(seg_y1[i] - lin_y1[i]) <= 6.0]
+            if len(inliers) >= 3:
+                seg_x = [seg_x[i] for i in inliers]
+                seg_y1 = [seg_y1[i] for i in inliers]
+                seg_y2 = [seg_y2[i] for i in inliers]
+            deg = 2 if len(seg_x) >= 5 else 1
+            poly_y1 = np.polyfit(seg_x, seg_y1, deg)
+            poly_y2 = np.polyfit(seg_x, seg_y2, deg)
+
+        # 2. ค้นหาเส้นแบ่งคอลัมน์แนวตั้ง 21 เส้น พร้อมฟิตพหุนามปรับความต่อเนื่อง
+        can_xs = [b[0] for b in self.CANONICAL_COL_BOUNDS] + [self.CANONICAL_COL_BOUNDS[-1][1]]
+        pred_xs = [xL + (cx - self.CANONICAL_LEFT_X) * scale_x for cx in can_xs]
+        raw_dxs: List[float] = []
+        valid_ks: List[float] = []
+
+        for px in pred_xs:
+            if poly_y1 is not None and poly_y2 is not None:
+                ry1 = int(round(float(np.polyval(poly_y1, px))))
+                ry2 = int(round(float(np.polyval(poly_y2, px))))
+            else:
+                cy_est = yL + slope * (px - xL)
+                ry1 = int(round(cy_est - default_half_h))
+                ry2 = int(round(cy_est + default_half_h + 1))
+            vy1 = max(0, ry1 + 6)
+            vy2 = min(h_img, ry2 - 6)
+            vx1 = max(0, int(round(px - 15)))
+            vx2 = min(w_img, int(round(px + 16)))
+            v_strip = norm_gray[vy1:vy2, vx1:vx2]
+            if v_strip.size > 0:
+                col_dark = 255.0 - np.mean(v_strip, axis=0)
+                pk = int(np.argmax(col_dark))
+                if col_dark[pk] > 18.0:
+                    det_x = vx1 + pk
+                    raw_dxs.append(float(det_x - px))
+                    valid_ks.append(float(px))
+
+        poly_dx = None
+        if len(valid_ks) >= 6:
+            lin_dx = np.polyval(np.polyfit(valid_ks, raw_dxs, 1), valid_ks)
+            inliers_x = [i for i in range(len(valid_ks)) if abs(raw_dxs[i] - lin_dx[i]) <= 5.0]
+            if len(inliers_x) >= 5:
+                valid_ks = [valid_ks[i] for i in inliers_x]
+                raw_dxs = [raw_dxs[i] for i in inliers_x]
+            deg_x = 2 if len(valid_ks) >= 8 else 1
+            poly_dx = np.polyfit(valid_ks, raw_dxs, deg_x)
+
+        final_xs: List[int] = []
+        for px in pred_xs:
+            exp_x = px + (float(np.polyval(poly_dx, px)) if poly_dx is not None else 0.0)
+            if poly_y1 is not None and poly_y2 is not None:
+                ry1 = int(round(float(np.polyval(poly_y1, exp_x))))
+                ry2 = int(round(float(np.polyval(poly_y2, exp_x))))
+            else:
+                cy_est = yL + slope * (exp_x - xL)
+                ry1 = int(round(cy_est - default_half_h))
+                ry2 = int(round(cy_est + default_half_h + 1))
+            vy1 = max(0, ry1 + 6)
+            vy2 = min(h_img, ry2 - 6)
+            vx1 = max(0, int(round(exp_x - 4)))
+            vx2 = min(w_img, int(round(exp_x + 5)))
+            v_strip = norm_gray[vy1:vy2, vx1:vx2]
+            if v_strip.size > 0:
+                col_dark = 255.0 - np.mean(v_strip, axis=0)
+                pk = int(np.argmax(col_dark))
+                if col_dark[pk] > 16.0:
+                    final_xs.append(vx1 + pk)
+                else:
+                    final_xs.append(int(round(exp_x)))
+            else:
+                final_xs.append(int(round(exp_x)))
+
+        # 3. สร้าง BBox ทั้ง 20 ช่องในแถว พร้อมปรับละเอียดแกน Y ในรัศมี +-2 px รอบเส้นโค้งของแถว
+        row_bboxes: List[Tuple[int, int, int, int]] = []
+        for c in range(self.NUM_COLS):
+            x1, x2 = final_xs[c], final_xs[c + 1]
+            cx = 0.5 * (x1 + x2)
+            if poly_y1 is not None and poly_y2 is not None:
+                ey1 = float(np.polyval(poly_y1, cx))
+                ey2 = float(np.polyval(poly_y2, cx))
+            else:
+                py = yL + slope * (cx - xL)
+                ey1 = py - default_half_h
+                ey2 = py + default_half_h + 1
+
+            sx1, sx2 = max(250, x1 - 120), min(2240, x2 + 120)
+            iy1, iy2 = int(round(ey1)), int(round(ey2))
+            t_win = norm_gray[max(0, iy1 - 2) : min(h_img, iy1 + 3), sx1:sx2]
+            b_win = norm_gray[max(0, iy2 - 2) : min(h_img, iy2 + 3), sx1:sx2]
+            y1 = iy1 - 2 + int(np.argmax(255.0 - np.mean(t_win, axis=1))) if t_win.size > 0 else iy1
+            y2 = iy2 - 2 + int(np.argmax(255.0 - np.mean(b_win, axis=1))) if b_win.size > 0 else iy2
+            row_bboxes.append((x1, y1, x2, y2))
+
+        return row_bboxes
+
     def _clean_cell_patch(self, raw_cell: np.ndarray) -> Tuple[np.ndarray, float]:
         """
         Layer 2 & Layer 3 (Rim-Restricted Morphological Grid-Line Subtraction + Core-Zone Ink Measurement):
@@ -676,20 +833,20 @@ class Template2GridExtractor:
             xR, yR = right_centers[r_idx]
             actual_span = xR - xL
             scale_x = actual_span / canonical_span
-            slope = (yR - yL) / (actual_span + 1e-5)
+
+            # สกัด Bounding Box ของทั้ง 20 ช่องในแถวนี้ด้วย Multi-Segment Row Tracking + Smooth Column Partitioning
+            row_bboxes = self._extract_row_cell_bboxes(
+                rectified_norm_gray, xL, yL, xR, yR, local_cell_half_h
+            )
 
             row_cells: List[CellPatch] = []
-            for c_idx, (can_x1, can_x2) in enumerate(self.CANONICAL_COL_BOUNDS):
+            for c_idx in range(self.NUM_COLS):
+                bbox_pred = row_bboxes[c_idx]
+                x1, y1, x2, y2 = bbox_pred
+
+                can_x1, can_x2 = self.CANONICAL_COL_BOUNDS[c_idx]
                 col_x1 = int(round(xL + (can_x1 - self.CANONICAL_LEFT_X) * scale_x))
                 col_x2 = int(round(xL + (can_x2 - self.CANONICAL_LEFT_X) * scale_x))
-                col_center_x = 0.5 * (col_x1 + col_x2)
-
-                pred_y_center = yL + slope * (col_center_x - xL)
-
-                bbox_pred = self._snap_cell_to_local_borders(
-                    rectified_norm_gray, col_x1, col_x2, pred_y_center, local_cell_half_h
-                )
-                x1, y1, x2, y2 = bbox_pred
 
                 snap_cx, snap_cy = 0.5 * (x1 + x2), 0.5 * (y1 + y2)
                 ideal_w = col_x2 - col_x1
