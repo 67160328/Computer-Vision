@@ -311,10 +311,11 @@ class DigitRecognizerEngine:
                             if h[3] != -1 and cv2.contourArea(cnts[k]) >= 4.0:
                                 has_hole = True
                     if not has_hole and conf < 0.85:
+                        p_7 = float(p[7])
                         top3_dict = dict(top3_list)
-                        if "7" in top3_dict and top3_dict["7"] >= 0.03:
+                        if p_7 >= 0.025 or ("7" in top3_dict and top3_dict["7"] >= 0.02):
                             pred_digit = "7"
-                            conf = max(conf, float(top3_dict["7"]))
+                            conf = max(conf, p_7)
 
                 pred_lookup[(f_name, c_idx)] = (pred_digit, conf, margin, top3_list)
 
