@@ -1,0 +1,715 @@
+[
+  {
+    "index": 1,
+    "filename": "IMG_9385.HEIC",
+    "stem": "IMG_9385",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "69160232",
+    "subject_id": "87033467",
+    "school_id": "690123456989",
+    "score": 10,
+    "max_score": 20,
+    "accuracy_pct": 50.0,
+    "cer_pct": 30.83,
+    "strikethroughs": 13,
+    "reprojection_rmse": 0.08,
+    "pipeline_ms": 4907.6,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9385_graded.jpg",
+    "errors": [
+      {
+        "question_num": 11,
+        "pred": "MUTNAUQ",
+        "gt": "QUANTUM",
+        "edit_dist": 4,
+        "reason": "OK"
+      },
+      {
+        "question_num": 12,
+        "pred": "NIPLOD",
+        "gt": "DOLPHIN",
+        "edit_dist": 6,
+        "reason": "OK"
+      },
+      {
+        "question_num": 13,
+        "pred": "ABCDE",
+        "gt": "JOURNEY",
+        "edit_dist": 6,
+        "reason": "OK"
+      },
+      {
+        "question_num": 14,
+        "pred": "CATANDDOG",
+        "gt": "VICTORY",
+        "edit_dist": 9,
+        "reason": "OK"
+      },
+      {
+        "question_num": 15,
+        "pred": "TREASRE",
+        "gt": "TREASURE",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 16,
+        "pred": "CHAMIONP",
+        "gt": "CHAMPION",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 17,
+        "pred": "DIVEION",
+        "gt": "ADVENTURE",
+        "edit_dist": 7,
+        "reason": "OK"
+      },
+      {
+        "question_num": 18,
+        "pred": "LIGHTNG",
+        "gt": "LIGHTNING",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 19,
+        "pred": "FIENDHIP",
+        "gt": "FRIENDSHIP",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 20,
+        "pred": "WQNDERLANE",
+        "gt": "WONDERLAND",
+        "edit_dist": 2,
+        "reason": "OK"
+      }
+    ]
+  },
+  {
+    "index": 2,
+    "filename": "IMG_9386.HEIC",
+    "stem": "IMG_9386",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "67160162",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 10,
+    "max_score": 20,
+    "accuracy_pct": 50.0,
+    "cer_pct": 11.28,
+    "strikethroughs": 11,
+    "reprojection_rmse": 0.13,
+    "pipeline_ms": 4527.2,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9386_graded.jpg",
+    "errors": [
+      {
+        "question_num": 1,
+        "pred": "QUIZH",
+        "gt": "QUIZ",
+        "edit_dist": 1,
+        "reason": "Low HCR conf (0.42), Near match (EditDist=1)"
+      },
+      {
+        "question_num": 4,
+        "pred": "ZEBKA",
+        "gt": "ZEBRA",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 6,
+        "pred": "SARK",
+        "gt": "SPARK",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 8,
+        "pred": "KNIFE",
+        "gt": "KNIGHT",
+        "edit_dist": 3,
+        "reason": "OK"
+      },
+      {
+        "question_num": 9,
+        "pred": "FREEZES",
+        "gt": "FREEZE",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 10,
+        "pred": "SHADROW",
+        "gt": "SHADOW",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 12,
+        "pred": "DOLLPHIN",
+        "gt": "DOLPHIN",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 15,
+        "pred": "TRAESUE",
+        "gt": "TREASURE",
+        "edit_dist": 3,
+        "reason": "OK"
+      },
+      {
+        "question_num": 16,
+        "pred": "CHAMPIONS",
+        "gt": "CHAMPION",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 20,
+        "pred": "WONBERLAD",
+        "gt": "WONDERLAND",
+        "edit_dist": 2,
+        "reason": "OK"
+      }
+    ]
+  },
+  {
+    "index": 3,
+    "filename": "IMG_9387.HEIC",
+    "stem": "IMG_9387",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "67160335",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 18,
+    "max_score": 20,
+    "accuracy_pct": 90.0,
+    "cer_pct": 3.76,
+    "strikethroughs": 19,
+    "reprojection_rmse": 0.14,
+    "pipeline_ms": 4146.0,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9387_graded.jpg",
+    "errors": [
+      {
+        "question_num": 3,
+        "pred": "WWFL",
+        "gt": "WOLF",
+        "edit_dist": 3,
+        "reason": "OK"
+      },
+      {
+        "question_num": 6,
+        "pred": "SSARB",
+        "gt": "SPARK",
+        "edit_dist": 2,
+        "reason": "OK"
+      }
+    ]
+  },
+  {
+    "index": 4,
+    "filename": "IMG_9388.HEIC",
+    "stem": "IMG_9388",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "67160370",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 20,
+    "max_score": 20,
+    "accuracy_pct": 100.0,
+    "cer_pct": 0.0,
+    "strikethroughs": 20,
+    "reprojection_rmse": 0.12,
+    "pipeline_ms": 4130.6,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9388_graded.jpg",
+    "errors": []
+  },
+  {
+    "index": 5,
+    "filename": "IMG_9389.HEIC",
+    "stem": "IMG_9389",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "67160335",
+    "subject_id": "89033467",
+    "school_id": "670123456787",
+    "score": 20,
+    "max_score": 20,
+    "accuracy_pct": 100.0,
+    "cer_pct": 0.0,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.18,
+    "pipeline_ms": 4196.7,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9389_graded.jpg",
+    "errors": []
+  },
+  {
+    "index": 6,
+    "filename": "IMG_9390.HEIC",
+    "stem": "IMG_9390",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "67160370",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 20,
+    "max_score": 20,
+    "accuracy_pct": 100.0,
+    "cer_pct": 0.0,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.16,
+    "pipeline_ms": 3929.5,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9390_graded.jpg",
+    "errors": []
+  },
+  {
+    "index": 7,
+    "filename": "IMG_9391.HEIC",
+    "stem": "IMG_9391",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "69160232",
+    "subject_id": "89033469",
+    "school_id": "690123456789",
+    "score": 20,
+    "max_score": 20,
+    "accuracy_pct": 100.0,
+    "cer_pct": 0.0,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.16,
+    "pipeline_ms": 4315.2,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9391_graded.jpg",
+    "errors": []
+  },
+  {
+    "index": 8,
+    "filename": "IMG_9392.HEIC",
+    "stem": "IMG_9392",
+    "qset_detected": 2,
+    "qset_name": "ชุดที่ 2 (คำสั้น 4-10 อักษร)",
+    "student_id": "67160167",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 20,
+    "max_score": 20,
+    "accuracy_pct": 100.0,
+    "cer_pct": 0.0,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.1,
+    "pipeline_ms": 4298.5,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9392_graded.jpg",
+    "errors": []
+  },
+  {
+    "index": 9,
+    "filename": "IMG_9393.HEIC",
+    "stem": "IMG_9393",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160335",
+    "subject_id": "80033467",
+    "school_id": "670123456789",
+    "score": 6,
+    "max_score": 20,
+    "accuracy_pct": 30.0,
+    "cer_pct": 37.79,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.06,
+    "pipeline_ms": 4818.4,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9393_graded.jpg",
+    "errors": [
+      {
+        "question_num": 3,
+        "pred": "CONNTEREEVOLUTIONARY",
+        "gt": "COUNTERREVOLUTIONARY",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 4,
+        "pred": "DISPROPORTIONATELY",
+        "gt": "INCOMPREHENSIBILITY",
+        "edit_dist": 15,
+        "reason": "OK"
+      },
+      {
+        "question_num": 5,
+        "pred": "INCOMPREHENSIBILITY",
+        "gt": "DISPROPORTIONATELY",
+        "edit_dist": 15,
+        "reason": "Low HCR conf (0.37)"
+      },
+      {
+        "question_num": 6,
+        "pred": "BSYCAOPHARMACOLOG",
+        "gt": "PSYCHOPHARMACOLOGY",
+        "edit_dist": 3,
+        "reason": "OK"
+      },
+      {
+        "question_num": 7,
+        "pred": "OVERSIMPLIFICATION",
+        "gt": "TRANSUBSTANTIATION",
+        "edit_dist": 12,
+        "reason": "OK"
+      },
+      {
+        "question_num": 8,
+        "pred": "TRASSUBSTANTIAITON",
+        "gt": "OVERSIMPLIFICATION",
+        "edit_dist": 14,
+        "reason": "OK"
+      },
+      {
+        "question_num": 10,
+        "pred": "TALACOMMUNICETION",
+        "gt": "TELECOMMUNICATION",
+        "edit_dist": 3,
+        "reason": "OK"
+      },
+      {
+        "question_num": 12,
+        "pred": "INDIVIDUALIZATION",
+        "gt": "STRAIGHTFORWARDLY",
+        "edit_dist": 16,
+        "reason": "OK"
+      },
+      {
+        "question_num": 13,
+        "pred": "STAAINGHTFORWARDLY",
+        "gt": "INDIVIDUALIZATION",
+        "edit_dist": 16,
+        "reason": "OK"
+      },
+      {
+        "question_num": 14,
+        "pred": "MISUNDERSSTANDINGS",
+        "gt": "MISUNDERSTANDINGS",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 16,
+        "pred": "EXTRAERRESTRIAL",
+        "gt": "EXTRATERRESTRIAL",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 17,
+        "pred": "ACKNOWLEDGEMENTS",
+        "gt": "BIOTECHNOLOGICAL",
+        "edit_dist": 15,
+        "reason": "Low HCR conf (0.37)"
+      },
+      {
+        "question_num": 18,
+        "pred": "BIOTECHNOLOGICAL",
+        "gt": "ACKNOWLEDGEMENTS",
+        "edit_dist": 15,
+        "reason": "OK"
+      },
+      {
+        "question_num": 20,
+        "pred": "CYBARSECURITA",
+        "gt": "CYBERSECURITY",
+        "edit_dist": 2,
+        "reason": "OK"
+      }
+    ]
+  },
+  {
+    "index": 10,
+    "filename": "IMG_9394.HEIC",
+    "stem": "IMG_9394",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160370",
+    "subject_id": "89033467",
+    "school_id": "670223456789",
+    "score": 14,
+    "max_score": 20,
+    "accuracy_pct": 70.0,
+    "cer_pct": 7.56,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.09,
+    "pipeline_ms": 4982.4,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9394_graded.jpg",
+    "errors": [
+      {
+        "question_num": 3,
+        "pred": "COUNTEREVOLUTION",
+        "gt": "COUNTERREVOLUTIONARY",
+        "edit_dist": 4,
+        "reason": "Low HCR conf (0.38)"
+      },
+      {
+        "question_num": 5,
+        "pred": "DISPROPORTIONALETT",
+        "gt": "DISPROPORTIONATELY",
+        "edit_dist": 3,
+        "reason": "OK"
+      },
+      {
+        "question_num": 6,
+        "pred": "PSYCHOPHARMACOLOG",
+        "gt": "PSYCHOPHARMACOLOGY",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 8,
+        "pred": "CONSTITUTIFICATION",
+        "gt": "OVERSIMPLIFICATION",
+        "edit_dist": 8,
+        "reason": "OK"
+      },
+      {
+        "question_num": 18,
+        "pred": "ACKNOWLEDGEMEIS",
+        "gt": "ACKNOWLEDGEMENTS",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 20,
+        "pred": "CYBER",
+        "gt": "CYBERSECURITY",
+        "edit_dist": 8,
+        "reason": "OK"
+      }
+    ]
+  },
+  {
+    "index": 11,
+    "filename": "IMG_9395.HEIC",
+    "stem": "IMG_9395",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160167",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 19,
+    "max_score": 20,
+    "accuracy_pct": 95.0,
+    "cer_pct": 0.29,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.27,
+    "pipeline_ms": 4564.4,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9395_graded.jpg",
+    "errors": [
+      {
+        "question_num": 8,
+        "pred": "OVERSIMPLIFICANTION",
+        "gt": "OVERSIMPLIFICATION",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      }
+    ]
+  },
+  {
+    "index": 12,
+    "filename": "IMG_9396.HEIC",
+    "stem": "IMG_9396",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160232",
+    "subject_id": "89033469",
+    "school_id": "670123456989",
+    "score": 19,
+    "max_score": 20,
+    "accuracy_pct": 95.0,
+    "cer_pct": 0.29,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.21,
+    "pipeline_ms": 4662.1,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9396_graded.jpg",
+    "errors": [
+      {
+        "question_num": 6,
+        "pred": "PSYCHOPHARMACOLOG",
+        "gt": "PSYCHOPHARMACOLOGY",
+        "edit_dist": 1,
+        "reason": "Low HCR conf (0.51), Near match (EditDist=1)"
+      }
+    ]
+  },
+  {
+    "index": 13,
+    "filename": "IMG_9397.HEIC",
+    "stem": "IMG_9397",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160335",
+    "subject_id": "87033467",
+    "school_id": "670123456789",
+    "score": 19,
+    "max_score": 20,
+    "accuracy_pct": 95.0,
+    "cer_pct": 0.29,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.25,
+    "pipeline_ms": 4962.6,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9397_graded.jpg",
+    "errors": [
+      {
+        "question_num": 6,
+        "pred": "PSYCHOPHARMACOLOG",
+        "gt": "PSYCHOPHARMACOLOGY",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      }
+    ]
+  },
+  {
+    "index": 14,
+    "filename": "IMG_9398.HEIC",
+    "stem": "IMG_9398",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160370",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 20,
+    "max_score": 20,
+    "accuracy_pct": 100.0,
+    "cer_pct": 0.0,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.12,
+    "pipeline_ms": 4797.7,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9398_graded.jpg",
+    "errors": []
+  },
+  {
+    "index": 15,
+    "filename": "IMG_9399.HEIC",
+    "stem": "IMG_9399",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160167",
+    "subject_id": "89033467",
+    "school_id": "670123456789",
+    "score": 15,
+    "max_score": 20,
+    "accuracy_pct": 75.0,
+    "cer_pct": 2.03,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.04,
+    "pipeline_ms": 4671.6,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9399_graded.jpg",
+    "errors": [
+      {
+        "question_num": 2,
+        "pred": "UNCHARRACTERISTICALL",
+        "gt": "UNCHARACTERISTICALLY",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 8,
+        "pred": "OVERXIMPUIFICATION",
+        "gt": "OVERSIMPLIFICATION",
+        "edit_dist": 2,
+        "reason": "OK"
+      },
+      {
+        "question_num": 9,
+        "pred": "CONSTITTUTIONALITY",
+        "gt": "CONSTITUTIONALITY",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 10,
+        "pred": "TELECUMMUNICATION",
+        "gt": "TELECOMMUNICATION",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      },
+      {
+        "question_num": 14,
+        "pred": "MISSUNDERSTANDINGS",
+        "gt": "MISUNDERSTANDINGS",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      }
+    ]
+  },
+  {
+    "index": 16,
+    "filename": "IMG_9400.HEIC",
+    "stem": "IMG_9400",
+    "qset_detected": 1,
+    "qset_name": "ชุดที่ 1 (คำยาว 13-20 อักษร)",
+    "student_id": "67160232",
+    "subject_id": "89033469",
+    "school_id": "670123456989",
+    "score": 13,
+    "max_score": 20,
+    "accuracy_pct": 65.0,
+    "cer_pct": 22.38,
+    "strikethroughs": 0,
+    "reprojection_rmse": 0.15,
+    "pipeline_ms": 4628.5,
+    "vis_path": "C:\\ClassRoomBuraphaUniversity\\Computer Vision\\Lab9\\metrics\\visuals\\test_vocab_heic\\IMG_9400_graded.jpg",
+    "errors": [
+      {
+        "question_num": 1,
+        "pred": "EFTROENCEPHALQGRAMLC",
+        "gt": "ELECTROENCEPHALOGRAM",
+        "edit_dist": 6,
+        "reason": "OK"
+      },
+      {
+        "question_num": 2,
+        "pred": "YLLACITSIRETCARAHCNU",
+        "gt": "UNCHARACTERISTICALLY",
+        "edit_dist": 18,
+        "reason": "Low HCR conf (0.40)"
+      },
+      {
+        "question_num": 3,
+        "pred": "NARY",
+        "gt": "COUNTERREVOLUTIONARY",
+        "edit_dist": 16,
+        "reason": "OK"
+      },
+      {
+        "question_num": 6,
+        "pred": "PSYCHOPORTIONATELY",
+        "gt": "PSYCHOPHARMACOLOGY",
+        "edit_dist": 10,
+        "reason": "Low HCR conf (0.50)"
+      },
+      {
+        "question_num": 14,
+        "pred": "MISSYOU",
+        "gt": "MISUNDERSTANDINGS",
+        "edit_dist": 13,
+        "reason": "OK"
+      },
+      {
+        "question_num": 15,
+        "pred": "ILOVEDOG",
+        "gt": "DISQUALIFICATION",
+        "edit_dist": 13,
+        "reason": "OK"
+      },
+      {
+        "question_num": 20,
+        "pred": "CYBERSECURIITY",
+        "gt": "CYBERSECURITY",
+        "edit_dist": 1,
+        "reason": "Near match (EditDist=1)"
+      }
+    ]
+  }
+]

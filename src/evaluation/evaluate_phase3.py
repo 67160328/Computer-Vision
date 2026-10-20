@@ -44,8 +44,26 @@ def imread_gray_unicode(path: Path) -> np.ndarray:
 
 
 def imread_bgr_unicode(path: Path) -> np.ndarray:
-    raw = np.fromfile(str(path), dtype=np.uint8)
-    return cv2.imdecode(raw, cv2.IMREAD_COLOR)
+    path_obj = Path(path)
+    if path_obj.suffix.lower() in (".heic", ".heif"):
+        try:
+            from PIL import Image, ImageOps
+            import pillow_heif
+            pillow_heif.register_heif_opener()
+            pil_img = ImageOps.exif_transpose(Image.open(str(path_obj)))
+            return cv2.cvtColor(np.array(pil_img.convert("RGB")), cv2.COLOR_RGB2BGR)
+        except Exception as e:
+            pass
+    raw = np.fromfile(str(path_obj), dtype=np.uint8)
+    img = cv2.imdecode(raw, cv2.IMREAD_COLOR)
+    if img is None:
+        try:
+            from PIL import Image, ImageOps
+            pil_img = ImageOps.exif_transpose(Image.open(str(path_obj)))
+            return cv2.cvtColor(np.array(pil_img.convert("RGB")), cv2.COLOR_RGB2BGR)
+        except Exception:
+            return None
+    return img
 
 
 def imwrite_unicode(path: Path, img: np.ndarray, quality: int = 95) -> bool:
